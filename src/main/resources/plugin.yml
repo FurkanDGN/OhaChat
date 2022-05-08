@@ -1,0 +1,4 @@
+name: Ohachat
+version: '${version}'
+main: com.outlook.furkan.dogan.dev.ohachat.OhaChat
+api-version: 1.16
