@@ -196,7 +196,7 @@ public abstract class SQLSource extends DataSource {
       "INSERT INTO %table (" +
         " unique_id," +
         " blacklist," +
-        " channel," +
+        " channel" +
         ") VALUES (?, ?);"
     ).regex("%table");
 
