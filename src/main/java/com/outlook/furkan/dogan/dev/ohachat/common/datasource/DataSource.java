@@ -44,10 +44,6 @@ public abstract class DataSource {
 
   protected abstract void saveSupply(OhaPlayer ohaPlayer);
 
-  protected abstract void saveBlacklistSupply(OhaPlayer ohaPlayer);
-
-  protected abstract void saveChannelSupply(OhaPlayer ohaPlayer);
-
   protected abstract void removeSupply(UUID uuid);
 
   protected abstract Set<OhaPlayer> getAll();

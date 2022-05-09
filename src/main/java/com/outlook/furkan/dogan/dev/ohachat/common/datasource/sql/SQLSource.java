@@ -55,44 +55,17 @@ public abstract class SQLSource extends DataSource {
   @Override
   protected synchronized void saveSupply(OhaPlayer ohaPlayer) {
     try {
-      final UUID uuid = ohaPlayer.getUniqueId();
-
-      if (this.playerNotExists(uuid)) {
-        this.insert(ohaPlayer);
-      }
-    } catch (SQLException ex) {
-      ex.printStackTrace();
-    }
-  }
-
-  @Override
-  protected synchronized void saveBlacklistSupply(OhaPlayer ohaPlayer) {
-    try {
-      final UUID uuid = ohaPlayer.getUniqueId();
+      UUID uuid = ohaPlayer.getUniqueId();
       Set<UUID> blacklist = ohaPlayer.getBlacklist();
       String blackListString = blacklist.stream()
         .map(String::valueOf)
         .collect(Collectors.joining(","));
-
-      if (this.playerNotExists(uuid)) {
-        this.insert(ohaPlayer);
-      } else {
-        this.updateColumn("blacklist", uuid, blackListString);
-      }
-    } catch (SQLException ex) {
-      ex.printStackTrace();
-    }
-  }
-
-  @Override
-  protected synchronized void saveChannelSupply(OhaPlayer ohaPlayer) {
-    try {
-      final UUID uuid = ohaPlayer.getUniqueId();
       String channel = ohaPlayer.getChannel();
 
       if (this.playerNotExists(uuid)) {
         this.insert(ohaPlayer);
       } else {
+        this.updateColumn("blacklist", uuid, blackListString);
         this.updateColumn("channel", uuid, channel);
       }
     } catch (SQLException ex) {

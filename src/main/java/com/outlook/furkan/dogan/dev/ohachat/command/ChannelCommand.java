@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 
 /**
@@ -43,7 +42,7 @@ public final class ChannelCommand extends BukkitCommand {
     StringBuilder stringBuilder = new StringBuilder();
     for (int i = 0; i < args.length; i++) {
       stringBuilder.append(args[i]);
-      if (i != args.length -1) {
+      if (i != args.length - 1) {
         stringBuilder.append(" ");
       }
     }
