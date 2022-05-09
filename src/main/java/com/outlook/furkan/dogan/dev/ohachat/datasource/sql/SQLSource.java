@@ -5,10 +5,7 @@ import com.outlook.furkan.dogan.dev.ohachat.common.domain.OhaPlayer;
 import com.outlook.furkan.dogan.dev.ohachat.datasource.DataSource;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -188,7 +185,7 @@ public abstract class SQLSource extends DataSource {
       "CREATE TABLE IF NOT EXISTS %table (" +
         "unique_id VARCHAR(70) NOT NULL," +
         "blacklist VARCHAR(9999) NOT NULL," +
-        "channel BLOB NOT NULL," +
+        "channel VARCHAR(9999) NOT NULL," +
         "UNIQUE (unique_id));"
     ).regex("%table");
 
