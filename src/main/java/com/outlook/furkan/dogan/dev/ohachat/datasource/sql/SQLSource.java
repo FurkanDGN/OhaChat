@@ -194,7 +194,7 @@ public abstract class SQLSource extends DataSource {
         " unique_id," +
         " blacklist," +
         " channel" +
-        ") VALUES (?, ?);"
+        ") VALUES (?, ?, ?);"
     ).regex("%table");
 
     public static RpString SELECT_ALL = RpString.from(
