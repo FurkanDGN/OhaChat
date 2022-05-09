@@ -19,6 +19,8 @@ public class NmsCommandUtil {
       CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
 
       commandMap.register(command, commandClass);
+
+      bukkitCommandMap.setAccessible(false);
     } catch(Exception e) {
       e.printStackTrace();
     }
