@@ -2,6 +2,7 @@ package com.outlook.furkan.dogan.dev.ohachat;
 
 import com.outlook.furkan.dogan.dev.ohachat.command.ChannelCommand;
 import com.outlook.furkan.dogan.dev.ohachat.common.config.ConfigFile;
+import com.outlook.furkan.dogan.dev.ohachat.common.config.LanguageFile;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
 import com.outlook.furkan.dogan.dev.ohachat.common.datasource.DataSource;
 import com.outlook.furkan.dogan.dev.ohachat.common.datasource.sql.impl.SQLite;
@@ -44,6 +45,7 @@ public final class OhaChat extends JavaPlugin {
 
   private void loadConfig() {
     ConfigFile.loadFile(this);
+    LanguageFile.loadFile(this);
   }
 
   private void registerPlugin(ChatTierManager chatTierManager,
