@@ -39,6 +39,22 @@ public class DefaultChatTierManager implements ChatTierManager {
   }
 
   @Override
+  public ChatTier getChatTier(String name) {
+    return this.chatTiers.get(name);
+  }
+
+  @Override
+  public void setChatTier(Player player, ChatTier chatTier) {
+    UUID uniqueId = player.getUniqueId();
+    String chatTierName = chatTier.getName();
+
+    OhaPlayer ohaPlayer = this.dataSource.getPlayer(uniqueId);
+    ohaPlayer.setChannel(chatTierName);
+
+    this.dataSource.save(ohaPlayer);
+  }
+
+  @Override
   public boolean setChatTier(Player player, String channel) {
     ChatTier chatTier = this.chatTiers.get(channel);
 

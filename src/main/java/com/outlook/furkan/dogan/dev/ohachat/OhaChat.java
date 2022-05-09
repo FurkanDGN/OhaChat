@@ -5,14 +5,18 @@ import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
 import com.outlook.furkan.dogan.dev.ohachat.common.datasource.DataSource;
 import com.outlook.furkan.dogan.dev.ohachat.common.datasource.sql.impl.SQLite;
 import com.outlook.furkan.dogan.dev.ohachat.handler.ChatHandler;
+import com.outlook.furkan.dogan.dev.ohachat.handler.CommandHandler;
 import com.outlook.furkan.dogan.dev.ohachat.handler.DefaultChatHandler;
+import com.outlook.furkan.dogan.dev.ohachat.handler.DefaultCommandHandler;
 import com.outlook.furkan.dogan.dev.ohachat.listener.ChatListener;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
 import com.outlook.furkan.dogan.dev.ohachat.manager.DefaultChatTierManager;
 import com.outlook.furkan.dogan.dev.ohachat.manager.DefaultPreferencesManager;
 import com.outlook.furkan.dogan.dev.ohachat.manager.PreferencesManager;
 import com.outlook.furkan.dogan.dev.ohachat.processor.ChatTierProcessor;
+import com.outlook.furkan.dogan.dev.ohachat.processor.CommandProcessor;
 import com.outlook.furkan.dogan.dev.ohachat.processor.DefaultChatTierProcessor;
+import com.outlook.furkan.dogan.dev.ohachat.processor.DefaultCommandProcessor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -27,12 +31,13 @@ public final class OhaChat extends JavaPlugin {
     ChatTierManager chatTierManager = new DefaultChatTierManager(dataSource);
     PreferencesManager preferencesManager = new DefaultPreferencesManager(dataSource);
     ChatTierProcessor chatTierProcessor = new DefaultChatTierProcessor(preferencesManager);
+    CommandProcessor commandProcessor = new DefaultCommandProcessor(chatTierManager);
 
     this.loadConfig();
     DefaultChatTierName.init();
     dataSource.loadAll();
     chatTierManager.loadDefaults();
-    this.registerChatListener(chatTierManager, chatTierProcessor);
+    this.registerChatListener(chatTierManager, chatTierProcessor, commandProcessor);
   }
 
   @Override
@@ -45,9 +50,11 @@ public final class OhaChat extends JavaPlugin {
   }
 
   private void registerChatListener(ChatTierManager chatTierManager,
-                                    ChatTierProcessor chatTierProcessor) {
+                                    ChatTierProcessor chatTierProcessor,
+                                    CommandProcessor commandProcessor) {
     ChatHandler chatHandler = new DefaultChatHandler(chatTierManager, chatTierProcessor);
-    ChatListener chatListener = new ChatListener(chatHandler);
+    CommandHandler commandHandler = new DefaultCommandHandler(commandProcessor);
+    ChatListener chatListener = new ChatListener(chatHandler, commandHandler);
 
     this.getServer().getPluginManager().registerEvents(chatListener, this);
   }
