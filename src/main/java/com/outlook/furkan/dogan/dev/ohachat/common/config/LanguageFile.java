@@ -36,6 +36,9 @@ public class LanguageFile extends TransformedObject {
     .regex("%channel%")
     .map(XColor::colorize);
 
+  public static RpString channelAlreadyExists = RpString.from("&cThis channel already exists.")
+    .map(XColor::colorize);
+
   public static RpString onlyForPlayer = RpString.from("&cThis command cannot be executed by console.")
     .map(XColor::colorize);
 

@@ -17,7 +17,7 @@ public interface ChatTierManager {
 
   void setChatTier(Player player, ChatTier chatTier);
 
-  void createChatTier(String name, ChatTierType chatTierType, Map<String, Object> metadata);
+  boolean createChatTier(String name, ChatTierType chatTierType, Map<String, Object> metadata);
 
   boolean deleteChatTier(String name);
 

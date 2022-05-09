@@ -55,9 +55,14 @@ public class DefaultChatTierManager implements ChatTierManager {
   }
 
   @Override
-  public void createChatTier(String name, ChatTierType chatTierType, Map<String, Object> metadata) {
-    ChatTier chatTier = new ChatTier(name, chatTierType, metadata);
-    this.chatTiers.put(name, chatTier);
+  public boolean createChatTier(String name, ChatTierType chatTierType, Map<String, Object> metadata) {
+    if (this.chatTiers.containsKey(name)) {
+      return false;
+    } else {
+      ChatTier chatTier = new ChatTier(name, chatTierType, metadata);
+      this.chatTiers.put(name, chatTier);
+      return true;
+    }
   }
 
   @Override

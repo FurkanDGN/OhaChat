@@ -78,10 +78,16 @@ public class OhaAdminCommand implements CommandExecutor {
 
         double range = Double.parseDouble(rangeArg);
 
-        this.chatTierManager.createChatTier(channelName, channelType, MapUtil.map(ChatTierMetadata.RANGE, range));
+        boolean isSuccess = this.chatTierManager.createChatTier(channelName, channelType, MapUtil.map(ChatTierMetadata.RANGE, range));
 
-        String createdMessage = LanguageFile.channelCreated.build(new SimpleEntry<>("%channel%", () -> channelName));
-        sender.sendMessage(createdMessage);
+        if (isSuccess) {
+          String createdMessage = LanguageFile.channelCreated.build(new SimpleEntry<>("%channel%", () -> channelName));
+          sender.sendMessage(createdMessage);
+          return true;
+        } else {
+          this.sendMessage(sender, LanguageFile.channelAlreadyExists);
+          return false;
+        }
       } else {
         this.chatTierManager.createChatTier(channelName, channelType, Collections.emptyMap());
 
