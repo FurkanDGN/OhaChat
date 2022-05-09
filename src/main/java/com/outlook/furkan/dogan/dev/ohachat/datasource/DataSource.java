@@ -24,7 +24,7 @@ public abstract class DataSource {
   }
 
   public final OhaPlayer getPlayer(UUID uuid) {
-    return Optional.of(DataSource.OHA_PLAYER_BY_UUID.get(uuid))
+    return Optional.ofNullable(DataSource.OHA_PLAYER_BY_UUID.get(uuid))
       .orElseGet(() -> this.createOhaPlayer(uuid));
   }
 
