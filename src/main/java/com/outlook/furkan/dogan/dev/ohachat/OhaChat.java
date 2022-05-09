@@ -1,6 +1,7 @@
 package com.outlook.furkan.dogan.dev.ohachat;
 
 import com.outlook.furkan.dogan.dev.ohachat.common.config.ConfigFile;
+import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
 import com.outlook.furkan.dogan.dev.ohachat.datasource.DataSource;
 import com.outlook.furkan.dogan.dev.ohachat.datasource.sql.impl.SQLite;
 import com.outlook.furkan.dogan.dev.ohachat.handler.ChatHandler;
@@ -22,6 +23,7 @@ public final class OhaChat extends JavaPlugin {
   @Override
   public void onEnable() {
     this.loadConfig();
+    DefaultChatTierName.init();
 
     File dataFile = new File(this.getDataFolder(), "data.db");
     DataSource dataSource = new SQLite(dataFile);
