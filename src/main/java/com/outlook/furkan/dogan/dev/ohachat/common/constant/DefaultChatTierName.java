@@ -12,7 +12,7 @@ public final class DefaultChatTierName {
   public static String LOCAL = "local";
   public static String WHISPER = "whisper";
 
-  public static void init() {
+  public static void loadFromConfig() {
     DefaultChatTierName.GLOBAL = ConfigFile.globalChannelName;
     DefaultChatTierName.SHOUT = ConfigFile.shoutChannelName;
     DefaultChatTierName.LOCAL = ConfigFile.localChannelName;

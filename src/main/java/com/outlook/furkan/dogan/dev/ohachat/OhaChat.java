@@ -38,7 +38,7 @@ public final class OhaChat extends JavaPlugin {
     CommandProcessor commandProcessor = new DefaultCommandProcessor(chatTierManager);
 
     this.loadConfig();
-    DefaultChatTierName.init();
+    DefaultChatTierName.loadFromConfig();
     dataSource.loadAll();
     chatTierManager.loadDefaults();
     this.registerPlugin(chatTierManager, chatTierProcessor, commandProcessor);
