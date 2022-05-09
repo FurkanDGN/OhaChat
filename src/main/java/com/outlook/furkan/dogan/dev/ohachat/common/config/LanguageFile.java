@@ -28,7 +28,7 @@ public class LanguageFile extends TransformedObject {
     .regex("%channel%")
     .map(XColor::colorize);
 
-  public static RpString channelDeleted = RpString.from("&eChannel &c%channel &ehas been deleted.")
+  public static RpString channelDeleted = RpString.from("&eChannel &c%channel% &ehas been deleted.")
     .regex("%channel%")
     .map(XColor::colorize);
 
