@@ -28,8 +28,12 @@ public class ConfigFile extends TransformedObject {
   @Comment("Name of local channel")
   public static String localChannelName = "local";
 
+  public static double localChannelRange = 20.0D;
+
   @Comment("Name of whisper channel")
   public static String whisperChannelName = "whisper";
+
+  public static double whisperChannelRange = 3.0D;
 
   private ConfigFile() {
   }

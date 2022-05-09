@@ -1,5 +1,6 @@
 package com.outlook.furkan.dogan.dev.ohachat.manager;
 
+import com.outlook.furkan.dogan.dev.ohachat.common.config.ConfigFile;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierMetadata;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
@@ -87,8 +88,8 @@ public class DefaultChatTierManager implements ChatTierManager {
 
     ChatTier global = new ChatTier(globalName, ChatTierType.GLOBAL, Collections.emptyMap());
     ChatTier shout = new ChatTier(shoutName, ChatTierType.SHOUT, Collections.emptyMap());
-    ChatTier local = new ChatTier(localName, ChatTierType.LOCAL, MapUtil.map(ChatTierMetadata.RANGE, 20.0D));
-    ChatTier whisper = new ChatTier(whisperName, ChatTierType.WHISPER, MapUtil.map(ChatTierMetadata.RANGE, 3.0D));
+    ChatTier local = new ChatTier(localName, ChatTierType.LOCAL, MapUtil.map(ChatTierMetadata.RANGE, ConfigFile.localChannelRange));
+    ChatTier whisper = new ChatTier(whisperName, ChatTierType.WHISPER, MapUtil.map(ChatTierMetadata.RANGE, ConfigFile.whisperChannelRange));
 
     this.chatTiers.put(globalName, global);
     this.chatTiers.put(shoutName, shout);
