@@ -25,8 +25,6 @@ public class DefaultChatTierManager implements ChatTierManager {
 
   public DefaultChatTierManager(DataSource dataSource) {
     this.dataSource = dataSource;
-
-    this.initiate();
   }
 
   @Override
@@ -57,7 +55,8 @@ public class DefaultChatTierManager implements ChatTierManager {
     }
   }
 
-  private void initiate() {
+  @Override
+  public void loadDefaults() {
     String globalName = DefaultChatTierName.GLOBAL;
     String shoutName = DefaultChatTierName.SHOUT;
     String localName = DefaultChatTierName.LOCAL;

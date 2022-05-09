@@ -11,4 +11,6 @@ public interface ChatTierManager {
   ChatTier findChatTier(Player player);
 
   boolean setChatTier(Player player, String channel);
+
+  void loadDefaults();
 }
