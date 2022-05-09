@@ -21,6 +21,10 @@ public class ChatListener implements Listener {
 
   @EventHandler
   public void onAsyncPlayerChatEvent(PlayerChatEvent event) {
+    if (event.getMessage().startsWith("/")) {
+      return;
+    }
+
     Set<Player> recipients = this.chatHandler.findRecipients(event);
     event.getRecipients().clear();
     event.getRecipients().addAll(recipients);
