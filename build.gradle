@@ -1,4 +1,5 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
     id 'java'
 }
 
@@ -6,6 +7,7 @@ group = 'com.outlook.furkan.dogan'
 version = '1.0'
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
         name = 'spigotmc-repo'
@@ -18,7 +20,14 @@ repositories {
 }
 
 dependencies {
+    // library
+    implementation 'com.gmail.furkanaxx34:DBukkit:1.0.0'
+
+    // spigot API
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+
+    // annotations
+    annotationProcessor('org.jetbrains:annotations:23.0.0')
 }
 
 def targetJavaVersion = 8
@@ -32,6 +41,26 @@ java {
 }
 
 tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        //noinspection GroovyAssignabilityCheck
+        options.release = targetJavaVersion
+    }
+}
+
+shadowJar {
+    archiveFileName.set("${project.name}.jar")
+    exclude 'META-INF/**'
+    exclude '**/MANIFEST.MF'
+    relocate 'co.aikar.commands', "com.outlook.furkan.dogan.dev.${project.name.toLowerCase(Locale.ENGLISH)}.acf"
+    relocate 'co.aikar.locales', "com.outlook.furkan.dogan.dev.${project.name.toLowerCase(Locale.ENGLISH)}.locales"
+    relocate 'org.json', "com.outlook.furkan.dogan.dev.${project.name.toLowerCase(Locale.ENGLISH)}.json"
+    minimize() {
+        exclude 'com.gmail.furkanaxx34:DBukkit:1.0.0'
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release = targetJavaVersion
     }
