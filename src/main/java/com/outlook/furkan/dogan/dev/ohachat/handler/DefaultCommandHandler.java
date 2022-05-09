@@ -1,6 +1,7 @@
 package com.outlook.furkan.dogan.dev.ohachat.handler;
 
 import com.outlook.furkan.dogan.dev.ohachat.processor.CommandProcessor;
+import com.outlook.furkan.dogan.dev.ohachat.util.MatcherUtil;
 import org.bukkit.entity.Player;
 
 import java.util.regex.Matcher;
@@ -11,7 +12,7 @@ import java.util.regex.Pattern;
  */
 public class DefaultCommandHandler implements CommandHandler {
 
-  private static final Pattern COMMAND_PATTERN = Pattern.compile("(^/)((channel\\s)?(?<channel>\\w+)\\s(?<message>.*))");
+  private static final Pattern COMMAND_PATTERN = Pattern.compile("(^/)((channel\\s)?(?<channel>\\w+)(\\s(?<message>.*))?)");
 
   private final CommandProcessor commandProcessor;
 
@@ -25,7 +26,7 @@ public class DefaultCommandHandler implements CommandHandler {
 
     if (matcher.matches()) {
       String channel = matcher.group("channel");
-      String message = matcher.group("message");
+      String message = MatcherUtil.groupExists(matcher, "message") ? matcher.group("message") : null;
 
       return this.commandProcessor.process(player, channel, message);
     } else {

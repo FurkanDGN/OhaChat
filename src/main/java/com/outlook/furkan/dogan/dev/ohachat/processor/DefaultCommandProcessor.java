@@ -23,8 +23,13 @@ public class DefaultCommandProcessor implements CommandProcessor {
       ChatTier oldChatTier = this.chatTierManager.findChatTier(player);
 
       this.chatTierManager.setChatTier(player, chatTier);
-      player.chat(message);
-      this.chatTierManager.setChatTier(player, oldChatTier);
+
+      if (message != null) {
+        player.chat(message);
+        this.chatTierManager.setChatTier(player, oldChatTier);
+      } else {
+        player.sendMessage("kanalın ayarlandı.");
+      }
 
       return true;
     } else {
