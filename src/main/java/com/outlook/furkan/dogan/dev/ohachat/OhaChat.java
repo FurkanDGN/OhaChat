@@ -25,6 +25,8 @@ public final class OhaChat extends JavaPlugin {
 
     File dataFile = new File(this.getDataFolder(), "data.db");
     DataSource dataSource = new SQLite(dataFile);
+    dataSource.loadAll();
+
     ChatTierManager chatTierManager = new DefaultChatTierManager(dataSource);
     PreferencesManager preferencesManager = new DefaultPreferencesManager(dataSource);
     ChatTierProcessor chatTierProcessor = new DefaultChatTierProcessor(preferencesManager);

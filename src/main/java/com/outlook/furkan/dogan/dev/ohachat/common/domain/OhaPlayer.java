@@ -12,7 +12,9 @@ public final class OhaPlayer {
   private final Set<UUID> blacklist;
   private String channel;
 
-  public OhaPlayer(UUID uniqueId, Set<UUID> blacklist, String channel) {
+  public OhaPlayer(UUID uniqueId,
+                   Set<UUID> blacklist,
+                   String channel) {
     this.uniqueId = uniqueId;
     this.blacklist = blacklist;
     this.channel = channel;
