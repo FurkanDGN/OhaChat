@@ -1,5 +1,6 @@
 package com.outlook.furkan.dogan.dev.ohachat.common.domain;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -34,5 +35,29 @@ public final class OhaPlayer {
 
   public void setChannel(String channel) {
     this.channel = channel;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || this.getClass() != o.getClass()) return false;
+    OhaPlayer ohaPlayer = (OhaPlayer) o;
+    return this.uniqueId.equals(ohaPlayer.uniqueId) &&
+      this.blacklist.equals(ohaPlayer.blacklist) &&
+      this.channel.equals(ohaPlayer.channel);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.uniqueId, this.blacklist, this.channel);
+  }
+
+  @Override
+  public String toString() {
+    return "OhaPlayer{" +
+      "uniqueId=" + this.uniqueId +
+      ", blacklist=" + this.blacklist +
+      ", channel='" + this.channel + '\'' +
+      '}';
   }
 }
