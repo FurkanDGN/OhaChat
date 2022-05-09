@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * @author Furkan Doğan
  */
-public class MapUtils {
+public class MapUtil {
 
   public static <K, V> Map<K, V> map(K k1, V v1) {
     Map<K, V> map = new HashMap<K, V>() {{

@@ -6,7 +6,7 @@ import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.OhaPlayer;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
 import com.outlook.furkan.dogan.dev.ohachat.datasource.DataSource;
-import com.outlook.furkan.dogan.dev.ohachat.util.MapUtils;
+import com.outlook.furkan.dogan.dev.ohachat.util.MapUtil;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
@@ -65,8 +65,8 @@ public class DefaultChatTierManager implements ChatTierManager {
 
     ChatTier global = new ChatTier(globalName, ChatTierType.GLOBAL, Collections.emptyMap());
     ChatTier shout = new ChatTier(shoutName, ChatTierType.SHOUT, Collections.emptyMap());
-    ChatTier local = new ChatTier(localName, ChatTierType.LOCAL, MapUtils.map(ChatTierMetadata.RANGE, 20.0D));
-    ChatTier whisper = new ChatTier(whisperName, ChatTierType.WHISPER, MapUtils.map(ChatTierMetadata.RANGE, 3.0D));
+    ChatTier local = new ChatTier(localName, ChatTierType.LOCAL, MapUtil.map(ChatTierMetadata.RANGE, 20.0D));
+    ChatTier whisper = new ChatTier(whisperName, ChatTierType.WHISPER, MapUtil.map(ChatTierMetadata.RANGE, 3.0D));
 
     this.chatTiers.put(globalName, global);
     this.chatTiers.put(shoutName, shout);
