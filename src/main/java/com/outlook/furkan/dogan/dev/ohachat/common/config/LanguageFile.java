@@ -39,13 +39,13 @@ public class LanguageFile extends TransformedObject {
   public static RpString onlyForPlayer = RpString.from("&cThis command cannot be executed by console.")
     .map(XColor::colorize);
 
-  public static RpString createCommandUsage = RpString.from("&7Usage: /ohaadmin <&ecreate&7> <&echannel name&7> <&eglobal&7/&eshout&7/&elocal&7/&ewhisper&7> <&erange&7>")
+  public static RpString createCommandUsage = RpString.from("&7Usage: &e/ohaadmin &7<&ecreate&7> <&echannel name&7> <&eglobal&7/&eshout&7/&elocal&7/&ewhisper&7> <&erange&7>")
     .map(XColor::colorize);
 
-  public static RpString deleteCommandUsage = RpString.from("&7Usage: /ohaadmin <&edelete&7> <&echannel name&7>")
+  public static RpString deleteCommandUsage = RpString.from("&7Usage: &e/ohaadmin &7<&edelete&7> <&echannel name&7>")
     .map(XColor::colorize);
 
-  public static RpString pluginCommandUsage = RpString.from("&7Usage: /ohaadmin <&ecreate&7/&bdelete&7> <&achannel name&7> <&eglobal&7/&eshout&7/&elocal&7/&ewhisper&7> <&erange&7>")
+  public static RpString pluginCommandUsage = RpString.from("&7Usage: &f/ohaadmin <&ecreate&7/&bdelete&7> <&achannel name&7> <&eglobal&7/&eshout&7/&elocal&7/&ewhisper&7> <&erange&7>")
     .map(XColor::colorize);
 
   public static RpString invalidCharacters = RpString.from("&cChannel name contains invalid characters.")

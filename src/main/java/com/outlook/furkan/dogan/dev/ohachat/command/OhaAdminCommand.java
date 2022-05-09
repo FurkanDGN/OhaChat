@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  */
 public class OhaAdminCommand implements CommandExecutor {
 
-  private final static Pattern NAME_PATTERN = Pattern.compile("([A-z\\d])");
+  private final static Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z\\d]+");
 
   private final ChatTierManager chatTierManager;
 
