@@ -30,10 +30,8 @@ public final class OhaChat extends JavaPlugin {
 
     this.loadConfig();
     DefaultChatTierName.init();
-
     dataSource.loadAll();
     chatTierManager.loadDefaults();
-
     this.registerChatListener(chatTierManager, chatTierProcessor);
   }
 
