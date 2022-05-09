@@ -30,7 +30,6 @@ public class DefaultChatHandler implements ChatHandler {
     Player player = event.getPlayer();
 
     this.handle(event, postRecipients);
-
     postRecipients.add(player);
 
     return postRecipients;
