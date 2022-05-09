@@ -24,7 +24,7 @@ public class LanguageFile extends TransformedObject {
     .regex("%channel%")
     .map(XColor::colorize);
 
-  public static RpString channelCreated = RpString.from("&aChannel &e%channel &ahas been created.")
+  public static RpString channelCreated = RpString.from("&aChannel &e%channel% &ahas been created.")
     .regex("%channel%")
     .map(XColor::colorize);
 
