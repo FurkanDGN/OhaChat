@@ -1,4 +1,4 @@
-package com.outlook.furkan.dogan.dev.ohachat.utils;
+package com.outlook.furkan.dogan.dev.ohachat.util;
 
 import java.util.Collections;
 import java.util.HashMap;
