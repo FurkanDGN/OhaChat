@@ -24,11 +24,40 @@ public class LanguageFile extends TransformedObject {
     .regex("%channel%")
     .map(XColor::colorize);
 
+  public static RpString channelCreated = RpString.from("&aChannel &e%channel &ahas been created.")
+    .regex("%channel%")
+    .map(XColor::colorize);
+
+  public static RpString channelDeleted = RpString.from("&eChannel &c%channel &ehas been deleted.")
+    .regex("%channel%")
+    .map(XColor::colorize);
+
   public static RpString channelNotFound = RpString.from("&cChannel &e%channel% &cnot found.")
     .regex("%channel%")
     .map(XColor::colorize);
 
   public static RpString onlyForPlayer = RpString.from("&cThis command cannot be executed by console.")
+    .map(XColor::colorize);
+
+  public static RpString createCommandUsage = RpString.from("&7Usage: /ohaadmin <&ecreate&7> <&echannel name&7> <&eglobal&7/&eshout&7/&elocal&7/&ewhisper&7> <&erange&7>")
+    .map(XColor::colorize);
+
+  public static RpString deleteCommandUsage = RpString.from("&7Usage: /ohaadmin <&edelete&7> <&echannel name&7>")
+    .map(XColor::colorize);
+
+  public static RpString pluginCommandUsage = RpString.from("&7Usage: /ohaadmin <&ecreate&7/&bdelete&7> <&achannel name&7> <&eglobal&7/&eshout&7/&elocal&7/&ewhisper&7> <&erange&7>")
+    .map(XColor::colorize);
+
+  public static RpString invalidCharacters = RpString.from("&cChannel name contains invalid characters.")
+    .map(XColor::colorize);
+
+  public static RpString invalidChannelType = RpString.from("&cInvalid channel type.")
+    .map(XColor::colorize);
+
+  public static RpString invalidRange = RpString.from("&cInvalid range.")
+    .map(XColor::colorize);
+
+  public static RpString noPermission = RpString.from("&cYou have not permission to execute this command.")
     .map(XColor::colorize);
 
   private LanguageFile() {

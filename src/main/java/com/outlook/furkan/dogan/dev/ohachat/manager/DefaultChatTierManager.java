@@ -55,19 +55,21 @@ public class DefaultChatTierManager implements ChatTierManager {
   }
 
   @Override
-  public boolean setChatTier(Player player, String channel) {
-    ChatTier chatTier = this.chatTiers.get(channel);
+  public void createChatTier(String name, ChatTierType chatTierType, Map<String, Object> metadata) {
+    ChatTier chatTier = new ChatTier(name, chatTierType, metadata);
+    this.chatTiers.put(name, chatTier);
+  }
 
-    if (chatTier == null) {
-      return false;
-    } else {
-      UUID uniqueId = player.getUniqueId();
-      OhaPlayer ohaPlayer = this.dataSource.getPlayer(uniqueId);
-
-      ohaPlayer.setChannel(channel);
-      this.dataSource.save(ohaPlayer);
-
+  @Override
+  public boolean deleteChatTier(String name) {
+    if (!name.equals(DefaultChatTierName.GLOBAL) &&
+      !name.equals(DefaultChatTierName.SHOUT) &&
+      !name.equals(DefaultChatTierName.LOCAL) &&
+      !name.equals(DefaultChatTierName.WHISPER)) {
+      this.chatTiers.remove(name);
       return true;
+    } else {
+      return false;
     }
   }
 

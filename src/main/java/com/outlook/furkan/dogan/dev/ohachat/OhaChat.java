@@ -1,6 +1,7 @@
 package com.outlook.furkan.dogan.dev.ohachat;
 
 import com.outlook.furkan.dogan.dev.ohachat.command.ChannelCommand;
+import com.outlook.furkan.dogan.dev.ohachat.command.OhaAdminCommand;
 import com.outlook.furkan.dogan.dev.ohachat.common.config.ConfigFile;
 import com.outlook.furkan.dogan.dev.ohachat.common.config.LanguageFile;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
@@ -57,10 +58,12 @@ public final class OhaChat extends JavaPlugin {
 
     this.getServer().getPluginManager().registerEvents(chatListener, this);
 
-    this.registerCommands(commandHandler);
+    this.registerCommands(commandHandler, chatTierManager);
   }
 
-  private void registerCommands(CommandHandler commandHandler) {
+  @SuppressWarnings("ConstantConditions")
+  private void registerCommands(CommandHandler commandHandler,
+                                ChatTierManager chatTierManager) {
     String global = DefaultChatTierName.GLOBAL;
     String shout = DefaultChatTierName.SHOUT;
     String local = DefaultChatTierName.LOCAL;
@@ -77,5 +80,8 @@ public final class OhaChat extends JavaPlugin {
     NmsCommandUtil.registerCommand(shout, shoutCommand);
     NmsCommandUtil.registerCommand(local, localCommand);
     NmsCommandUtil.registerCommand(whisper, whisperCommand);
+
+    OhaAdminCommand ohaAdminCommand = new OhaAdminCommand(chatTierManager);
+    this.getCommand("ohaadmin").setExecutor(ohaAdminCommand);
   }
 }
