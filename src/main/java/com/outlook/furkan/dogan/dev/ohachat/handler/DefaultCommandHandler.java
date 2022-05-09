@@ -5,7 +5,6 @@ import com.outlook.furkan.dogan.dev.ohachat.processor.CommandProcessor;
 import com.outlook.furkan.dogan.dev.ohachat.util.MatcherUtil;
 import org.bukkit.entity.Player;
 
-import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

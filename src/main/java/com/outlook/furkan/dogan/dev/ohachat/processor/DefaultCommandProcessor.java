@@ -27,7 +27,7 @@ public class DefaultCommandProcessor implements CommandProcessor {
 
       this.chatTierManager.setChatTier(player, chatTier);
 
-      if (message != null) {
+      if (message != null && !message.isEmpty()) {
         player.chat(message);
         this.chatTierManager.setChatTier(player, oldChatTier);
       } else {
