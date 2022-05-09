@@ -65,8 +65,8 @@ public class DefaultChatTierManager implements ChatTierManager {
 
     ChatTier global = new ChatTier(globalName, ChatTierType.GLOBAL, Collections.emptyMap());
     ChatTier shout = new ChatTier(shoutName, ChatTierType.SHOUT, Collections.emptyMap());
-    ChatTier local = new ChatTier(localName, ChatTierType.LOCAL, MapUtils.map(ChatTierMetadata.RANGE, 20));
-    ChatTier whisper = new ChatTier(whisperName, ChatTierType.WHISPER, MapUtils.map(ChatTierMetadata.RANGE, 3));
+    ChatTier local = new ChatTier(localName, ChatTierType.LOCAL, MapUtils.map(ChatTierMetadata.RANGE, 20.0D));
+    ChatTier whisper = new ChatTier(whisperName, ChatTierType.WHISPER, MapUtils.map(ChatTierMetadata.RANGE, 3.0D));
 
     this.chatTiers.put(globalName, global);
     this.chatTiers.put(shoutName, shout);

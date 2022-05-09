@@ -6,11 +6,8 @@ import com.outlook.furkan.dogan.dev.ohachat.datasource.DataSource;
 
 import java.io.File;
 import java.sql.*;
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public abstract class SQLSource extends DataSource {
@@ -37,9 +34,10 @@ public abstract class SQLSource extends DataSource {
       while (resultSet.next()) {
         UUID uniqueId = UUID.fromString(resultSet.getString("unique_id"));
         String blacklistString = resultSet.getString("blacklist");
-        Set<UUID> blacklist = Arrays.stream(blacklistString.split("\\s*,\\s*"))
-          .map(UUID::fromString)
-          .collect(Collectors.toSet());
+        Set<UUID> blacklist = blacklistString.isEmpty() ? Collections.emptySet() :
+          Arrays.stream(blacklistString.split("\\s*,\\s*"))
+            .map(UUID::fromString)
+            .collect(Collectors.toSet());
         String channel = resultSet.getString("channel");
 
         OhaPlayer ohaPlayer = new OhaPlayer(uniqueId, blacklist, channel);

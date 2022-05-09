@@ -27,8 +27,11 @@ public class DefaultChatHandler implements ChatHandler {
 
   public Set<Player> findRecipients(PlayerChatEvent event) {
     Set<Player> postRecipients = new HashSet<>();
+    Player player = event.getPlayer();
 
     this.handle(event, postRecipients);
+
+    postRecipients.add(player);
 
     return postRecipients;
   }
