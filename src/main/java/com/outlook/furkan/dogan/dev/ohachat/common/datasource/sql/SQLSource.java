@@ -1,8 +1,8 @@
-package com.outlook.furkan.dogan.dev.ohachat.datasource.sql;
+package com.outlook.furkan.dogan.dev.ohachat.common.datasource.sql;
 
 import com.gmail.furkanaxx34.dlibrary.replaceable.RpString;
+import com.outlook.furkan.dogan.dev.ohachat.common.datasource.DataSource;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.OhaPlayer;
-import com.outlook.furkan.dogan.dev.ohachat.datasource.DataSource;
 
 import java.io.File;
 import java.sql.*;

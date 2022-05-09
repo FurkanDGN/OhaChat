@@ -1,6 +1,6 @@
-package com.outlook.furkan.dogan.dev.ohachat.datasource.sql.impl;
+package com.outlook.furkan.dogan.dev.ohachat.common.datasource.sql.impl;
 
-import com.outlook.furkan.dogan.dev.ohachat.datasource.sql.SQLSource;
+import com.outlook.furkan.dogan.dev.ohachat.common.datasource.sql.SQLSource;
 
 import java.io.File;
 import java.sql.Connection;

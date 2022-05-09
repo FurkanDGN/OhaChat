@@ -5,7 +5,7 @@ import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.OhaPlayer;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
-import com.outlook.furkan.dogan.dev.ohachat.datasource.DataSource;
+import com.outlook.furkan.dogan.dev.ohachat.common.datasource.DataSource;
 import com.outlook.furkan.dogan.dev.ohachat.util.MapUtil;
 import org.bukkit.entity.Player;
 

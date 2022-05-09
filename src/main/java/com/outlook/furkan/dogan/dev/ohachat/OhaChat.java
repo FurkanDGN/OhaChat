@@ -2,8 +2,8 @@ package com.outlook.furkan.dogan.dev.ohachat;
 
 import com.outlook.furkan.dogan.dev.ohachat.common.config.ConfigFile;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
-import com.outlook.furkan.dogan.dev.ohachat.datasource.DataSource;
-import com.outlook.furkan.dogan.dev.ohachat.datasource.sql.impl.SQLite;
+import com.outlook.furkan.dogan.dev.ohachat.common.datasource.DataSource;
+import com.outlook.furkan.dogan.dev.ohachat.common.datasource.sql.impl.SQLite;
 import com.outlook.furkan.dogan.dev.ohachat.handler.ChatHandler;
 import com.outlook.furkan.dogan.dev.ohachat.handler.DefaultChatHandler;
 import com.outlook.furkan.dogan.dev.ohachat.listener.ChatListener;

@@ -1,4 +1,4 @@
-package com.outlook.furkan.dogan.dev.ohachat.datasource;
+package com.outlook.furkan.dogan.dev.ohachat.common.datasource;
 
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.OhaPlayer;
