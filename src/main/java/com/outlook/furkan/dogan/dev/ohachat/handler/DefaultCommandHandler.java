@@ -3,6 +3,7 @@ package com.outlook.furkan.dogan.dev.ohachat.handler;
 import com.outlook.furkan.dogan.dev.ohachat.common.config.LanguageFile;
 import com.outlook.furkan.dogan.dev.ohachat.processor.CommandProcessor;
 import com.outlook.furkan.dogan.dev.ohachat.util.MatcherUtil;
+import com.outlook.furkan.dogan.dev.ohachat.util.MessageUtil;
 import org.bukkit.entity.Player;
 
 import java.util.AbstractMap.SimpleEntry;
@@ -34,11 +35,7 @@ public class DefaultCommandHandler implements CommandHandler {
       boolean process = this.commandProcessor.process(player, channel, message);
 
       if (!process && startsWith) {
-        String errorMessage = LanguageFile.channelNotFound.build(
-          new SimpleEntry<>("%channel%", () -> channel)
-        );
-
-        player.sendMessage(errorMessage);
+        MessageUtil.sendMessage(player, LanguageFile.channelNotFound, new SimpleEntry<>("%channel%", () -> channel));
         return false;
       }
 

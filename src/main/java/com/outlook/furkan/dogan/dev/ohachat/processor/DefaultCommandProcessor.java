@@ -3,9 +3,10 @@ package com.outlook.furkan.dogan.dev.ohachat.processor;
 import com.outlook.furkan.dogan.dev.ohachat.common.config.LanguageFile;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
+import com.outlook.furkan.dogan.dev.ohachat.util.MessageUtil;
 import org.bukkit.entity.Player;
 
-import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleEntry;
 
 /**
  * @author Furkan Doğan
@@ -31,11 +32,7 @@ public class DefaultCommandProcessor implements CommandProcessor {
         player.chat(message);
         this.chatTierManager.setChatTier(player, oldChatTier);
       } else {
-        String successMessage = LanguageFile.channelSet.build(
-          new AbstractMap.SimpleEntry<>("%channel%", () -> channel)
-        );
-
-        player.sendMessage(successMessage);
+        MessageUtil.sendMessage(player, LanguageFile.channelSet, new SimpleEntry<>("%channel%", () -> channel));
       }
 
       return true;

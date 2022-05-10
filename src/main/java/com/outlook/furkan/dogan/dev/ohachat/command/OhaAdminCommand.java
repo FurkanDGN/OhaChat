@@ -1,7 +1,6 @@
 package com.outlook.furkan.dogan.dev.ohachat.command;
 
 import com.gmail.furkanaxx34.dlibrary.bukkit.utils.NumberUtil;
-import com.gmail.furkanaxx34.dlibrary.replaceable.RpString;
 import com.outlook.furkan.dogan.dev.ohachat.common.config.LanguageFile;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierMetadata;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
@@ -33,9 +32,7 @@ public class OhaAdminCommand implements CommandExecutor {
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
     if (!sender.hasPermission(CommandPermission.ADMIN_COMMAND_PERMISSION)) {
-      String errorMessage = LanguageFile.noPermission.build();
-
-      sender.sendMessage(errorMessage);
+      MessageUtil.sendMessage(sender, LanguageFile.noPermission);
       return false;
     }
 
@@ -82,8 +79,7 @@ public class OhaAdminCommand implements CommandExecutor {
         boolean isSuccess = this.chatTierManager.createChatTier(channelName, channelType, MapUtil.map(ChatTierMetadata.RANGE, range));
 
         if (isSuccess) {
-          String createdMessage = LanguageFile.channelCreated.build(new SimpleEntry<>("%channel%", () -> channelName));
-          sender.sendMessage(createdMessage);
+          MessageUtil.sendMessage(sender, LanguageFile.channelCreated, new SimpleEntry<>("%channel%", () -> channelName));
           return true;
         } else {
           MessageUtil.sendMessage(sender, LanguageFile.channelAlreadyExists);
@@ -91,9 +87,7 @@ public class OhaAdminCommand implements CommandExecutor {
         }
       } else {
         this.chatTierManager.createChatTier(channelName, channelType, Collections.emptyMap());
-
-        String createdMessage = LanguageFile.channelCreated.build(new SimpleEntry<>("%channel%", () -> channelName));
-        sender.sendMessage(createdMessage);
+        MessageUtil.sendMessage(sender, LanguageFile.channelCreated, new SimpleEntry<>("%channel%", () -> channelName));
       }
     } else if (args[0].equalsIgnoreCase("delete")) {
       if (args.length < 2) {
@@ -105,14 +99,10 @@ public class OhaAdminCommand implements CommandExecutor {
 
       boolean isDeleted = this.chatTierManager.deleteChatTier(channelName);
       if (isDeleted) {
-        String createdMessage = LanguageFile.channelDeleted.build(new SimpleEntry<>("%channel%", () -> channelName));
-        sender.sendMessage(createdMessage);
+        MessageUtil.sendMessage(sender, LanguageFile.channelDeleted, new SimpleEntry<>("%channel%", () -> channelName));
         return true;
       } else {
-        String errorMessage = LanguageFile.channelNotFound.build(
-          new SimpleEntry<>("%channel%", () -> channelName)
-        );
-        sender.sendMessage(errorMessage);
+        MessageUtil.sendMessage(sender, LanguageFile.channelNotFound, new SimpleEntry<>("%channel%", () -> channelName));
         return false;
       }
     } else {
