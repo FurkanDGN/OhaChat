@@ -49,7 +49,7 @@ public abstract class DataSource {
   protected abstract Set<OhaPlayer> getAll();
 
   private OhaPlayer createOhaPlayer(UUID uuid) {
-    OhaPlayer ohaPlayer = new OhaPlayer(uuid, Collections.emptySet(), DefaultChatTierName.GLOBAL);
+    OhaPlayer ohaPlayer = new OhaPlayer(uuid, new HashSet<>(), DefaultChatTierName.GLOBAL);
     this.save(ohaPlayer);
     return ohaPlayer;
   }

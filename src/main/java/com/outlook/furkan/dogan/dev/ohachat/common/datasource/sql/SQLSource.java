@@ -34,7 +34,7 @@ public abstract class SQLSource extends DataSource {
       while (resultSet.next()) {
         UUID uniqueId = UUID.fromString(resultSet.getString("unique_id"));
         String blacklistString = resultSet.getString("blacklist");
-        Set<String> blacklist = blacklistString.isEmpty() ? Collections.emptySet() :
+        Set<String> blacklist = blacklistString.isEmpty() ? new HashSet<>() :
           Arrays.stream(blacklistString.split("\\s*,\\s*"))
             .collect(Collectors.toSet());
         String channel = resultSet.getString("channel");
