@@ -28,23 +28,12 @@ public abstract class DataSource {
       .orElseGet(() -> this.createOhaPlayer(uuid));
   }
 
-  public final void removePlayer(UUID uuid) {
-    DataSource.OHA_PLAYER_BY_UUID.remove(uuid);
-    DataSource.executor.execute(() -> this.removeSupply(uuid));
-  }
-
   public final void save(OhaPlayer ohaPlayer) {
     DataSource.OHA_PLAYER_BY_UUID.put(ohaPlayer.getUniqueId(), ohaPlayer);
     DataSource.executor.execute(() -> this.saveSupply(ohaPlayer));
   }
 
-  public final Map<UUID, OhaPlayer> getOhaPlayers() {
-    return Collections.unmodifiableMap(DataSource.OHA_PLAYER_BY_UUID);
-  }
-
   protected abstract void saveSupply(OhaPlayer ohaPlayer);
-
-  protected abstract void removeSupply(UUID uuid);
 
   protected abstract Set<OhaPlayer> getAll();
 

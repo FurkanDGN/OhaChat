@@ -70,25 +70,7 @@ public abstract class SQLSource extends DataSource {
     }
   }
 
-  @Override
-  protected synchronized void removeSupply(UUID uuid) {
-    try {
-      this.delete(uuid);
-    } catch (SQLException ex) {
-      ex.printStackTrace();
-    }
-  }
-
   protected abstract Connection createConnection();
-
-  private void delete(UUID uuid) throws SQLException {
-    final PreparedStatement statement = this.connection.prepareStatement(Query.DELETE.build(
-      new SimpleEntry<>("%table", () -> SQLSource.TABLE_NAME)
-    ));
-    statement.setString(1, uuid.toString());
-    statement.execute();
-    statement.close();
-  }
 
   private void createTables() {
     try {
