@@ -5,3 +5,7 @@ api-version: 1.16
 commands:
   ohaadmin:
     description: Admin command for channels.
+  block:
+    description: Block the player you don't want to see.
+  unblock:
+    description: Unblock someone you blocked.

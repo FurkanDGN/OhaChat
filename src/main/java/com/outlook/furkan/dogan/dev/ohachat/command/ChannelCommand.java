@@ -2,6 +2,7 @@ package com.outlook.furkan.dogan.dev.ohachat.command;
 
 import com.outlook.furkan.dogan.dev.ohachat.common.config.LanguageFile;
 import com.outlook.furkan.dogan.dev.ohachat.handler.CommandHandler;
+import com.outlook.furkan.dogan.dev.ohachat.util.MessageUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
@@ -31,9 +32,7 @@ public final class ChannelCommand extends BukkitCommand {
 
       return this.commandHandler.handle(player, message);
     } else {
-      String errorMessage = LanguageFile.onlyForPlayer.build();
-
-      sender.sendMessage(errorMessage);
+      MessageUtil.sendMessage(sender, LanguageFile.onlyForPlayer);
       return false;
     }
   }

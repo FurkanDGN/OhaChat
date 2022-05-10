@@ -10,11 +10,11 @@ import java.util.UUID;
 public final class OhaPlayer {
 
   private final UUID uniqueId;
-  private final Set<UUID> blacklist;
+  private final Set<String> blacklist;
   private String channel;
 
   public OhaPlayer(UUID uniqueId,
-                   Set<UUID> blacklist,
+                   Set<String> blacklist,
                    String channel) {
     this.uniqueId = uniqueId;
     this.blacklist = blacklist;
@@ -25,7 +25,7 @@ public final class OhaPlayer {
     return this.uniqueId;
   }
 
-  public Set<UUID> getBlacklist() {
+  public Set<String> getBlacklist() {
     return this.blacklist;
   }
 

@@ -8,6 +8,7 @@ import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.CommandPermission;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
 import com.outlook.furkan.dogan.dev.ohachat.util.MapUtil;
+import com.outlook.furkan.dogan.dev.ohachat.util.MessageUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,32 +40,32 @@ public class OhaAdminCommand implements CommandExecutor {
     }
 
     if (args.length == 0) {
-      this.sendMessage(sender, LanguageFile.pluginCommandUsage);
+      MessageUtil.sendMessage(sender, LanguageFile.pluginCommandUsage);
       return false;
     }
 
     if (args[0].equalsIgnoreCase("create")) {
       if (args.length < 3) {
-        this.sendMessage(sender, LanguageFile.createCommandUsage);
+        MessageUtil.sendMessage(sender, LanguageFile.createCommandUsage);
         return false;
       }
 
       String channelName = args[1];
 
       if (!OhaAdminCommand.NAME_PATTERN.matcher(channelName).matches()) {
-        this.sendMessage(sender, LanguageFile.invalidCharacters);
+        MessageUtil.sendMessage(sender, LanguageFile.invalidCharacters);
         return false;
       }
 
       ChatTierType channelType = ChatTierType.fromString(args[2]);
       if (channelType == null) {
-        this.sendMessage(sender, LanguageFile.invalidChannelType);
+        MessageUtil.sendMessage(sender, LanguageFile.invalidChannelType);
         return false;
       }
 
       if (channelType == ChatTierType.LOCAL || channelType == ChatTierType.WHISPER) {
         if (args.length < 4) {
-          this.sendMessage(sender, LanguageFile.invalidRange);
+          MessageUtil.sendMessage(sender, LanguageFile.invalidRange);
           return false;
         }
 
@@ -72,7 +73,7 @@ public class OhaAdminCommand implements CommandExecutor {
         boolean isInteger = NumberUtil.isFloat(rangeArg) || NumberUtil.isInteger(rangeArg);
 
         if (!isInteger) {
-          this.sendMessage(sender, LanguageFile.invalidRange);
+          MessageUtil.sendMessage(sender, LanguageFile.invalidRange);
           return false;
         }
 
@@ -85,7 +86,7 @@ public class OhaAdminCommand implements CommandExecutor {
           sender.sendMessage(createdMessage);
           return true;
         } else {
-          this.sendMessage(sender, LanguageFile.channelAlreadyExists);
+          MessageUtil.sendMessage(sender, LanguageFile.channelAlreadyExists);
           return false;
         }
       } else {
@@ -96,7 +97,7 @@ public class OhaAdminCommand implements CommandExecutor {
       }
     } else if (args[0].equalsIgnoreCase("delete")) {
       if (args.length < 2) {
-        this.sendMessage(sender, LanguageFile.deleteCommandUsage);
+        MessageUtil.sendMessage(sender, LanguageFile.deleteCommandUsage);
         return false;
       }
 
@@ -115,14 +116,9 @@ public class OhaAdminCommand implements CommandExecutor {
         return false;
       }
     } else {
-      this.sendMessage(sender, LanguageFile.pluginCommandUsage);
+      MessageUtil.sendMessage(sender, LanguageFile.pluginCommandUsage);
     }
 
     return false;
-  }
-
-  private void sendMessage(CommandSender sender, RpString rpString) {
-    String message = rpString.build();
-    sender.sendMessage(message);
   }
 }

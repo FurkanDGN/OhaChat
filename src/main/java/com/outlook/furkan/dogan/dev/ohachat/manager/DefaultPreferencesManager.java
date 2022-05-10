@@ -20,12 +20,43 @@ public class DefaultPreferencesManager implements PreferencesManager {
 
   @Override
   public boolean shouldSee(Player sender, Player recipient) {
-    UUID senderUniqueId = sender.getUniqueId();
+    String name = sender.getName();
     UUID recipientUniqueId = recipient.getUniqueId();
 
     OhaPlayer ohaPlayer = this.dataSource.getPlayer(recipientUniqueId);
-    Set<UUID> blacklist = ohaPlayer.getBlacklist();
+    Set<String> blacklist = ohaPlayer.getBlacklist();
 
-    return !blacklist.contains(senderUniqueId);
+    return !blacklist.contains(name);
+  }
+
+  @Override
+  public boolean blockPlayer(Player player, String target) {
+    UUID recipientUniqueId = player.getUniqueId();
+
+    OhaPlayer ohaPlayer = this.dataSource.getPlayer(recipientUniqueId);
+    Set<String> blacklist = ohaPlayer.getBlacklist();
+    if (!blacklist.contains(target)) {
+      return false;
+    }
+
+    blacklist.add(target);
+
+    this.dataSource.save(ohaPlayer);
+    return true;
+  }
+
+  @Override
+  public boolean unblockPlayer(Player player, String target) {
+    UUID recipientUniqueId = player.getUniqueId();
+
+    OhaPlayer ohaPlayer = this.dataSource.getPlayer(recipientUniqueId);
+    Set<String> blacklist = ohaPlayer.getBlacklist();
+    if (!blacklist.contains(target)) {
+      return false;
+    }
+    blacklist.remove(target);
+
+    this.dataSource.save(ohaPlayer);
+    return true;
   }
 }

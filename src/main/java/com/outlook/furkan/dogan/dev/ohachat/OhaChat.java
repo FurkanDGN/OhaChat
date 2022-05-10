@@ -1,5 +1,6 @@
 package com.outlook.furkan.dogan.dev.ohachat;
 
+import com.outlook.furkan.dogan.dev.ohachat.command.BlockCommand;
 import com.outlook.furkan.dogan.dev.ohachat.command.ChannelCommand;
 import com.outlook.furkan.dogan.dev.ohachat.command.OhaAdminCommand;
 import com.outlook.furkan.dogan.dev.ohachat.common.config.ConfigFile;
@@ -34,14 +35,13 @@ public final class OhaChat extends JavaPlugin {
     DataSource dataSource = new SQLite(dataFile);
     ChatTierManager chatTierManager = new DefaultChatTierManager(dataSource);
     PreferencesManager preferencesManager = new DefaultPreferencesManager(dataSource);
-    ChatTierProcessor chatTierProcessor = new DefaultChatTierProcessor(preferencesManager);
     CommandProcessor commandProcessor = new DefaultCommandProcessor(chatTierManager);
 
     this.loadConfigurationFiles();
     DefaultChatTierName.loadFromConfig();
     dataSource.loadAll();
     chatTierManager.loadDefaults();
-    this.loadPlugin(chatTierManager, chatTierProcessor, commandProcessor);
+    this.loadPlugin(chatTierManager, commandProcessor, preferencesManager);
   }
 
   private void loadConfigurationFiles() {
@@ -50,20 +50,22 @@ public final class OhaChat extends JavaPlugin {
   }
 
   private void loadPlugin(ChatTierManager chatTierManager,
-                          ChatTierProcessor chatTierProcessor,
-                          CommandProcessor commandProcessor) {
+                          CommandProcessor commandProcessor,
+                          PreferencesManager preferencesManager) {
+    ChatTierProcessor chatTierProcessor = new DefaultChatTierProcessor(preferencesManager);
     ChatHandler chatHandler = new DefaultChatHandler(chatTierManager, chatTierProcessor);
     CommandHandler commandHandler = new DefaultCommandHandler(commandProcessor);
     ChatListener chatListener = new ChatListener(chatHandler);
 
     this.getServer().getPluginManager().registerEvents(chatListener, this);
 
-    this.registerCommands(commandHandler, chatTierManager);
+    this.registerCommands(commandHandler, chatTierManager, preferencesManager);
   }
 
   @SuppressWarnings("ConstantConditions")
   private void registerCommands(CommandHandler commandHandler,
-                                ChatTierManager chatTierManager) {
+                                ChatTierManager chatTierManager,
+                                PreferencesManager preferencesManager) {
     String global = DefaultChatTierName.GLOBAL;
     String shout = DefaultChatTierName.SHOUT;
     String local = DefaultChatTierName.LOCAL;
@@ -83,5 +85,9 @@ public final class OhaChat extends JavaPlugin {
 
     OhaAdminCommand ohaAdminCommand = new OhaAdminCommand(chatTierManager);
     this.getCommand("ohaadmin").setExecutor(ohaAdminCommand);
+
+    BlockCommand blockCommand = new BlockCommand(preferencesManager);
+    this.getCommand("block").setExecutor(blockCommand);
+    this.getCommand("unblock").setExecutor(blockCommand);
   }
 }

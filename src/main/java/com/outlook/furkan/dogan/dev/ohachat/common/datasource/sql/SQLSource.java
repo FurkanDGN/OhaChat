@@ -34,9 +34,8 @@ public abstract class SQLSource extends DataSource {
       while (resultSet.next()) {
         UUID uniqueId = UUID.fromString(resultSet.getString("unique_id"));
         String blacklistString = resultSet.getString("blacklist");
-        Set<UUID> blacklist = blacklistString.isEmpty() ? Collections.emptySet() :
+        Set<String> blacklist = blacklistString.isEmpty() ? Collections.emptySet() :
           Arrays.stream(blacklistString.split("\\s*,\\s*"))
-            .map(UUID::fromString)
             .collect(Collectors.toSet());
         String channel = resultSet.getString("channel");
 
@@ -56,10 +55,8 @@ public abstract class SQLSource extends DataSource {
   protected synchronized void saveSupply(OhaPlayer ohaPlayer) {
     try {
       UUID uuid = ohaPlayer.getUniqueId();
-      Set<UUID> blacklist = ohaPlayer.getBlacklist();
-      String blackListString = blacklist.stream()
-        .map(String::valueOf)
-        .collect(Collectors.joining(","));
+      Set<String> blacklist = ohaPlayer.getBlacklist();
+      String blackListString = String.join(",", blacklist);
       String channel = ohaPlayer.getChannel();
 
       if (this.playerNotExists(uuid)) {
@@ -120,10 +117,8 @@ public abstract class SQLSource extends DataSource {
     ));
     final UUID uniqueId = player.getUniqueId();
     String uniqueIdString = uniqueId.toString();
-    Set<UUID> blacklist = player.getBlacklist();
-    String blackListString = blacklist.stream()
-      .map(String::valueOf)
-      .collect(Collectors.joining(","));
+    Set<String> blacklist = player.getBlacklist();
+    String blackListString = String.join(",", blacklist);
     String channel = player.getChannel();
 
     statement.setString(1, uniqueIdString);

@@ -39,7 +39,18 @@ public class LanguageFile extends TransformedObject {
   public static RpString channelAlreadyExists = RpString.from("&cThis channel already exists.")
     .map(XColor::colorize);
 
-  public static RpString onlyForPlayer = RpString.from("&cThis command cannot be executed by console.")
+  public static RpString playerBlocked = RpString.from("&7You have &eblocked &7the &e%player% &7player.")
+    .regex("%player%")
+    .map(XColor::colorize);
+
+  public static RpString playerUnblocked = RpString.from("&7You have &eunblocked &7the &e%player% &7player.")
+    .regex("%player%")
+    .map(XColor::colorize);
+
+  public static RpString alreadyPlayerBlocked = RpString.from("&eYou have already blocked this player.")
+    .map(XColor::colorize);
+
+  public static RpString alreadyPlayerUnblocked = RpString.from("&eYou have not already blocked this player.")
     .map(XColor::colorize);
 
   public static RpString createCommandUsage = RpString.from("&7Usage: &e/ohaadmin &7<&ecreate&7> <&echannel name&7> <&eglobal&7/&eshout&7/&elocal&7/&ewhisper&7> <&erange&7>")
@@ -51,6 +62,10 @@ public class LanguageFile extends TransformedObject {
   public static RpString pluginCommandUsage = RpString.from("&7Usage: &f/ohaadmin <&ecreate&7/&bdelete&7> <&achannel name&7> <&eglobal&7/&eshout&7/&elocal&7/&ewhisper&7> <&erange&7>")
     .map(XColor::colorize);
 
+  public static RpString blockCommandUsage = RpString.from("&7Usage: &e/block &7<&eplayer&7>");
+
+  public static RpString unblockCommandUsage = RpString.from("&7Usage: &e/unblock &7<&eplayer&7>");
+
   public static RpString invalidCharacters = RpString.from("&cChannel name contains invalid characters.")
     .map(XColor::colorize);
 
@@ -58,6 +73,9 @@ public class LanguageFile extends TransformedObject {
     .map(XColor::colorize);
 
   public static RpString invalidRange = RpString.from("&cInvalid range.")
+    .map(XColor::colorize);
+
+  public static RpString onlyForPlayer = RpString.from("&cThis command cannot be executed by console.")
     .map(XColor::colorize);
 
   public static RpString noPermission = RpString.from("&cYou have not permission to execute this command.")

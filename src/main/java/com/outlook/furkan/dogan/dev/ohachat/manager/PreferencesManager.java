@@ -8,4 +8,8 @@ import org.bukkit.entity.Player;
 public interface PreferencesManager {
 
   boolean shouldSee(Player sender, Player recipient);
+
+  boolean blockPlayer(Player player, String target);
+
+  boolean unblockPlayer(Player player, String target);
 }
