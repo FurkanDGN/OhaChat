@@ -41,7 +41,7 @@ public final class OhaChat extends JavaPlugin {
     DefaultChatTierName.loadFromConfig();
     dataSource.loadAll();
     chatTierManager.loadDefaults();
-    this.registerPlugin(chatTierManager, chatTierProcessor, commandProcessor);
+    this.loadPlugin(chatTierManager, chatTierProcessor, commandProcessor);
   }
 
   private void loadConfig() {
@@ -49,9 +49,9 @@ public final class OhaChat extends JavaPlugin {
     LanguageFile.loadFile(this);
   }
 
-  private void registerPlugin(ChatTierManager chatTierManager,
-                              ChatTierProcessor chatTierProcessor,
-                              CommandProcessor commandProcessor) {
+  private void loadPlugin(ChatTierManager chatTierManager,
+                          ChatTierProcessor chatTierProcessor,
+                          CommandProcessor commandProcessor) {
     ChatHandler chatHandler = new DefaultChatHandler(chatTierManager, chatTierProcessor);
     CommandHandler commandHandler = new DefaultCommandHandler(commandProcessor);
     ChatListener chatListener = new ChatListener(chatHandler);
