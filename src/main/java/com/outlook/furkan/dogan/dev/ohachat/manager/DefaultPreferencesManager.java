@@ -35,7 +35,7 @@ public class DefaultPreferencesManager implements PreferencesManager {
 
     OhaPlayer ohaPlayer = this.dataSource.getPlayer(recipientUniqueId);
     Set<String> blacklist = ohaPlayer.getBlacklist();
-    if (!blacklist.contains(target)) {
+    if (blacklist.contains(target)) {
       return false;
     }
 
