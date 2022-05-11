@@ -37,7 +37,7 @@ public final class OhaChat extends JavaPlugin {
     PreferencesManager preferencesManager = new DefaultPreferencesManager(dataSource);
     CommandProcessor commandProcessor = new DefaultCommandProcessor(chatTierManager);
     CommandHandler commandHandler = new DefaultCommandHandler(commandProcessor);
-    ChannelCommandManager channelCommandManager = new DefaultChannelCommandManager(commandHandler);
+    ChatTierCommandManager chatTierCommandManager = new DefaultChatTierCommandManager(commandHandler);
 
     this.loadConfigurationFiles();
     DefaultChatTierName.loadFromConfig();
@@ -45,7 +45,7 @@ public final class OhaChat extends JavaPlugin {
     chatTierManager.loadDefaults();
     chatTierManager.loadCustoms();
 
-    this.loadPlugin(chatTierManager, commandHandler, preferencesManager, channelCommandManager);
+    this.loadPlugin(chatTierManager, commandHandler, preferencesManager, chatTierCommandManager);
   }
 
   private void loadConfigurationFiles() {
@@ -56,14 +56,14 @@ public final class OhaChat extends JavaPlugin {
   private void loadPlugin(ChatTierManager chatTierManager,
                           CommandHandler commandHandler,
                           PreferencesManager preferencesManager,
-                          ChannelCommandManager channelCommandManager) {
+                          ChatTierCommandManager chatTierCommandManager) {
     ChatTierProcessor chatTierProcessor = new DefaultChatTierProcessor(preferencesManager);
     ChatHandler chatHandler = new DefaultChatHandler(chatTierManager, chatTierProcessor);
     ChatListener chatListener = new ChatListener(chatHandler);
 
     this.getServer().getPluginManager().registerEvents(chatListener, this);
 
-    this.registerCommands(commandHandler, chatTierManager, preferencesManager, channelCommandManager);
+    this.registerCommands(commandHandler, chatTierManager, preferencesManager, chatTierCommandManager);
 
     Plugin placeholderAPI = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
     if (placeholderAPI != null) {
@@ -75,7 +75,7 @@ public final class OhaChat extends JavaPlugin {
   private void registerCommands(CommandHandler commandHandler,
                                 ChatTierManager chatTierManager,
                                 PreferencesManager preferencesManager,
-                                ChannelCommandManager channelCommandManager) {
+                                ChatTierCommandManager chatTierCommandManager) {
     String global = DefaultChatTierName.GLOBAL;
     String shout = DefaultChatTierName.SHOUT;
     String local = DefaultChatTierName.LOCAL;
@@ -93,7 +93,7 @@ public final class OhaChat extends JavaPlugin {
     NmsCommandUtil.registerCommand(local, localCommand);
     NmsCommandUtil.registerCommand(whisper, whisperCommand);
 
-    OhaAdminCommand ohaAdminCommand = new OhaAdminCommand(chatTierManager, channelCommandManager);
+    OhaAdminCommand ohaAdminCommand = new OhaAdminCommand(chatTierManager, chatTierCommandManager);
     this.getCommand("ohaadmin").setExecutor(ohaAdminCommand);
 
     BlockCommand blockCommand = new BlockCommand(preferencesManager);
@@ -103,7 +103,7 @@ public final class OhaChat extends JavaPlugin {
     ConfigFile.loadChatTiers()
       .forEach(chatTier -> {
         String name = chatTier.getName();
-        channelCommandManager.registerCommand(name);
+        chatTierCommandManager.registerCommand(name);
       });
   }
 }

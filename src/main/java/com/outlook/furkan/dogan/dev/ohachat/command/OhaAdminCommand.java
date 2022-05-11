@@ -6,7 +6,7 @@ import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierMetadata;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.CommandPermission;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.NamePatterns;
-import com.outlook.furkan.dogan.dev.ohachat.manager.ChannelCommandManager;
+import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierCommandManager;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
 import com.outlook.furkan.dogan.dev.ohachat.util.MapUtil;
 import com.outlook.furkan.dogan.dev.ohachat.util.MessageUtil;
@@ -24,12 +24,12 @@ import java.util.Locale;
 public class OhaAdminCommand implements CommandExecutor {
 
   private final ChatTierManager chatTierManager;
-  private final ChannelCommandManager channelCommandManager;
+  private final ChatTierCommandManager chatTierCommandManager;
 
   public OhaAdminCommand(ChatTierManager chatTierManager,
-                         ChannelCommandManager channelCommandManager) {
+                         ChatTierCommandManager chatTierCommandManager) {
     this.chatTierManager = chatTierManager;
-    this.channelCommandManager = channelCommandManager;
+    this.chatTierCommandManager = chatTierCommandManager;
   }
 
   @Override
@@ -80,7 +80,7 @@ public class OhaAdminCommand implements CommandExecutor {
 
     if (channelType != ChatTierType.LOCAL && channelType != ChatTierType.WHISPER) {
       this.chatTierManager.createChatTier(channelName, channelType, Collections.emptyMap());
-      this.channelCommandManager.registerCommand(channelName);
+      this.chatTierCommandManager.registerCommand(channelName);
       MessageUtil.sendMessage(sender, LanguageFile.channelCreated, new SimpleEntry<>("%channel%", () -> channelName));
       return true;
     } else {
@@ -102,7 +102,7 @@ public class OhaAdminCommand implements CommandExecutor {
       boolean isSuccess = this.chatTierManager.createChatTier(channelName, channelType, MapUtil.map(ChatTierMetadata.RANGE, range));
 
       if (isSuccess) {
-        this.channelCommandManager.registerCommand(channelName);
+        this.chatTierCommandManager.registerCommand(channelName);
         MessageUtil.sendMessage(sender, LanguageFile.channelCreated, new SimpleEntry<>("%channel%", () -> channelName));
         return true;
       } else {
@@ -122,7 +122,7 @@ public class OhaAdminCommand implements CommandExecutor {
 
     boolean isDeleted = this.chatTierManager.deleteChatTier(channelName);
     if (isDeleted) {
-      this.channelCommandManager.unregisterCommand(channelName);
+      this.chatTierCommandManager.unregisterCommand(channelName);
       MessageUtil.sendMessage(sender, LanguageFile.channelDeleted, new SimpleEntry<>("%channel%", () -> channelName));
       return true;
     } else {

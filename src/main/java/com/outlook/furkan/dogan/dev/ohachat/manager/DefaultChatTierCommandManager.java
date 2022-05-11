@@ -7,11 +7,11 @@ import com.outlook.furkan.dogan.dev.ohachat.util.NmsCommandUtil;
 /**
  * @author Furkan Doğan
  */
-public class DefaultChannelCommandManager implements ChannelCommandManager {
+public class DefaultChatTierCommandManager implements ChatTierCommandManager {
 
   private final CommandHandler commandHandler;
 
-  public DefaultChannelCommandManager(CommandHandler commandHandler) {
+  public DefaultChatTierCommandManager(CommandHandler commandHandler) {
     this.commandHandler = commandHandler;
   }
 
