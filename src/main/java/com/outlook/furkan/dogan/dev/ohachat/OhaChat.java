@@ -66,7 +66,7 @@ public final class OhaChat extends JavaPlugin {
     this.registerCommands(commandHandler, chatTierManager, preferencesManager);
 
     Plugin placeholderAPI = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
-    if(placeholderAPI != null) {
+    if (placeholderAPI != null) {
       new PAPIHook(chatTierManager).register();
     }
   }

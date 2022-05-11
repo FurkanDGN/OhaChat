@@ -17,9 +17,6 @@ import java.io.File;
 @Names(modifier = Names.Modifier.TO_LOWER_CASE, strategy = Names.Strategy.HYPHEN_CASE)
 public class LanguageFile extends TransformedObject {
 
-  @Exclude
-  private static TransformedObject instance;
-
   public static RpString channelSet = RpString.from("&aYour channel set to &e%channel%&a.")
     .regex("%channel%")
     .map(XColor::colorize);
@@ -80,6 +77,9 @@ public class LanguageFile extends TransformedObject {
 
   public static RpString noPermission = RpString.from("&cYou have not permission to execute this command.")
     .map(XColor::colorize);
+
+  @Exclude
+  private static TransformedObject instance;
 
   private LanguageFile() {
   }

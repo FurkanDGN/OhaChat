@@ -15,8 +15,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
-import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -24,9 +27,6 @@ import java.util.stream.Collectors;
  */
 @Names(modifier = Names.Modifier.TO_LOWER_CASE, strategy = Names.Strategy.HYPHEN_CASE)
 public class ConfigFile extends TransformedObject {
-
-  @Exclude
-  private static TransformedObject instance;
 
   @Comment("Name of global channel")
   public static String globalChannelName = "global";
@@ -45,6 +45,9 @@ public class ConfigFile extends TransformedObject {
 
   @Comment("Range of whisper channel")
   public static double whisperChannelRange = 3.0D;
+
+  @Exclude
+  private static TransformedObject instance;
 
   private ConfigFile() {
   }

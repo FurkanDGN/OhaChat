@@ -5,18 +5,22 @@ import com.outlook.furkan.dogan.dev.ohachat.common.datasource.DataSource;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.OhaPlayer;
 
 import java.io.File;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public abstract class SQLSource extends DataSource {
 
   private static final String TABLE_NAME = "oha_players";
-
-  protected File file;
-
   private final Connection connection;
+  protected File file;
 
   public SQLSource(File file) {
     this.file = file;

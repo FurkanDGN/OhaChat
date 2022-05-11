@@ -21,7 +21,7 @@ public class NmsCommandUtil {
       commandMap.register(command, commandClass);
 
       bukkitCommandMap.setAccessible(false);
-    } catch(Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }

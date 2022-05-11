@@ -1,7 +1,7 @@
 package com.outlook.furkan.dogan.dev.ohachat.manager;
 
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.OhaPlayer;
 import com.outlook.furkan.dogan.dev.ohachat.common.datasource.DataSource;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.OhaPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
