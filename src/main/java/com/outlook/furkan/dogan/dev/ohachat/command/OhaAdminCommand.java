@@ -84,10 +84,15 @@ public class OhaAdminCommand implements CommandExecutor {
     }
 
     if (channelType != ChatTierType.LOCAL && channelType != ChatTierType.WHISPER) {
-      this.chatTierManager.createChatTier(channelName, channelType, Collections.emptyMap());
-      this.chatTierCommandManager.registerCommand(channelName);
-      MessageUtil.sendMessage(sender, LanguageFile.channelCreated, new SimpleEntry<>("%channel%", () -> channelName));
-      return true;
+      boolean success = this.chatTierManager.createChatTier(channelName, channelType, Collections.emptyMap());
+      if (success) {
+        this.chatTierCommandManager.registerCommand(channelName);
+        MessageUtil.sendMessage(sender, LanguageFile.channelCreated, new SimpleEntry<>("%channel%", () -> channelName));
+        return true;
+      } else {
+        MessageUtil.sendMessage(sender, LanguageFile.channelAlreadyExists);
+        return false;
+      }
     } else {
       if (args.length < 4) {
         MessageUtil.sendMessage(sender, LanguageFile.invalidRange);
