@@ -62,14 +62,8 @@ public class ConfigFile extends TransformedObject {
     String chatTierType = chatTier.getChatTierType().name();
     Map<String, Object> metadata = chatTier.getMetadata();
 
-    String typePath = String.format(ChatTierConfigPath.TYPE_PATH, name);
-    ConfigFile.instance.set(typePath, chatTierType);
-
-    metadata.forEach((key, value) -> {
-      String metadataPath = String.format(ChatTierConfigPath.METADATA_PATH, name);
-      String metadataValuePath = String.format("%s.%s", metadataPath, key);
-      ConfigFile.instance.set(metadataValuePath, value);
-    });
+    ConfigFile.saveChatTierType(name, chatTierType);
+    ConfigFile.saveChatTierMetadata(name, metadata);
 
     ConfigFile.instance.save();
   }
@@ -101,6 +95,19 @@ public class ConfigFile extends TransformedObject {
     }
 
     return chatTiers;
+  }
+
+  private static void saveChatTierType(String name, String type) {
+    String typePath = String.format(ChatTierConfigPath.TYPE_PATH, name);
+    ConfigFile.instance.set(typePath, type);
+  }
+
+  private static void saveChatTierMetadata(String name, Map<String, Object> metadata) {
+    metadata.forEach((key, value) -> {
+      String metadataPath = String.format(ChatTierConfigPath.METADATA_PATH, name);
+      String metadataValuePath = String.format("%s.%s", metadataPath, key);
+      ConfigFile.instance.set(metadataValuePath, value);
+    });
   }
 
   private static ChatTierType buildChatTierType(String path) {
