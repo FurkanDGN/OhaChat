@@ -4,9 +4,9 @@ import com.outlook.furkan.dogan.dev.ohachat.common.config.ConfigFile;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierMetadata;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
+import com.outlook.furkan.dogan.dev.ohachat.common.datasource.DataSource;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.OhaPlayer;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
-import com.outlook.furkan.dogan.dev.ohachat.common.datasource.DataSource;
 import com.outlook.furkan.dogan.dev.ohachat.util.MapUtil;
 import org.bukkit.entity.Player;
 
@@ -29,8 +29,7 @@ public class DefaultChatTierManager implements ChatTierManager {
   }
 
   @Override
-  public ChatTier findChatTier(Player player) {
-    UUID uniqueId = player.getUniqueId();
+  public ChatTier findChatTier(UUID uniqueId) {
     OhaPlayer ohaPlayer = this.dataSource.getPlayer(uniqueId);
     String channel = ohaPlayer.getChannel();
 

@@ -12,6 +12,7 @@ import com.outlook.furkan.dogan.dev.ohachat.handler.ChatHandler;
 import com.outlook.furkan.dogan.dev.ohachat.handler.CommandHandler;
 import com.outlook.furkan.dogan.dev.ohachat.handler.DefaultChatHandler;
 import com.outlook.furkan.dogan.dev.ohachat.handler.DefaultCommandHandler;
+import com.outlook.furkan.dogan.dev.ohachat.hook.PAPIHook;
 import com.outlook.furkan.dogan.dev.ohachat.listener.ChatListener;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
 import com.outlook.furkan.dogan.dev.ohachat.manager.DefaultChatTierManager;
@@ -22,6 +23,8 @@ import com.outlook.furkan.dogan.dev.ohachat.processor.CommandProcessor;
 import com.outlook.furkan.dogan.dev.ohachat.processor.DefaultChatTierProcessor;
 import com.outlook.furkan.dogan.dev.ohachat.processor.DefaultCommandProcessor;
 import com.outlook.furkan.dogan.dev.ohachat.util.NmsCommandUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -60,6 +63,11 @@ public final class OhaChat extends JavaPlugin {
     this.getServer().getPluginManager().registerEvents(chatListener, this);
 
     this.registerCommands(commandHandler, chatTierManager, preferencesManager);
+
+    Plugin placeholderAPI = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
+    if(placeholderAPI != null) {
+      new PAPIHook(chatTierManager).register();
+    }
   }
 
   @SuppressWarnings("ConstantConditions")

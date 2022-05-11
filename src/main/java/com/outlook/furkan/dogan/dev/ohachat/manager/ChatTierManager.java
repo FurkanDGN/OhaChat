@@ -5,13 +5,19 @@ import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Furkan Doğan
  */
 public interface ChatTierManager {
 
-  ChatTier findChatTier(Player player);
+  ChatTier findChatTier(UUID uniqueId);
+
+  default ChatTier findChatTier(Player player) {
+    UUID uniqueId = player.getUniqueId();
+    return this.findChatTier(uniqueId);
+  }
 
   ChatTier getChatTier(String name);
 
