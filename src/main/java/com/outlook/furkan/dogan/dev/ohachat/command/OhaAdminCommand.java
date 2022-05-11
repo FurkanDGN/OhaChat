@@ -53,6 +53,7 @@ public class OhaAdminCommand implements CommandExecutor {
       }
 
       ChatTierType channelType = ChatTierType.fromString(args[2]);
+
       if (channelType == null) {
         MessageUtil.sendMessage(sender, LanguageFile.invalidChannelType);
         return false;
@@ -65,8 +66,8 @@ public class OhaAdminCommand implements CommandExecutor {
         }
 
         String rangeArg = args[3];
-        boolean isInteger = NumberUtil.isFloat(rangeArg) || NumberUtil.isInteger(rangeArg);
 
+        boolean isInteger = NumberUtil.isFloat(rangeArg) || NumberUtil.isInteger(rangeArg);
         if (!isInteger) {
           MessageUtil.sendMessage(sender, LanguageFile.invalidRange);
           return false;
