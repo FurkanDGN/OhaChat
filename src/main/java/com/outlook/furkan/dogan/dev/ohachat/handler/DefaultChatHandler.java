@@ -12,6 +12,7 @@ import java.util.Set;
 /**
  * @author Furkan Doğan
  */
+@SuppressWarnings("deprecation")
 public class DefaultChatHandler implements ChatHandler {
 
   private final ChatTierManager chatTierManager;
