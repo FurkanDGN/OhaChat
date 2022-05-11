@@ -43,7 +43,6 @@ public class OhaAdminCommand implements CommandExecutor {
 
   private boolean handleCommand(CommandSender sender, String[] args) {
     String operation = args[0].toLowerCase(Locale.ENGLISH);
-
     switch (operation) {
       case "create":
         return this.handleCreate(sender, args);

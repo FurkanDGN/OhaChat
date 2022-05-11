@@ -29,9 +29,9 @@ public class BlockCommand implements CommandExecutor {
       return false;
     }
 
-    String operation = label.toLowerCase(Locale.ENGLISH);
-
     Player player = ((Player) sender).getPlayer();
+
+    String operation = label.toLowerCase(Locale.ENGLISH);
     switch (operation) {
       case "block":
         return this.handleBlock(player, args);
