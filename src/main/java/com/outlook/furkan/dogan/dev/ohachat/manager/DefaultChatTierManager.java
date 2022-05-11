@@ -1,5 +1,6 @@
 package com.outlook.furkan.dogan.dev.ohachat.manager;
 
+import com.outlook.furkan.dogan.dev.ohachat.command.ChannelCommand;
 import com.outlook.furkan.dogan.dev.ohachat.common.config.ConfigFile;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierMetadata;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
@@ -7,7 +8,9 @@ import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
 import com.outlook.furkan.dogan.dev.ohachat.common.datasource.DataSource;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.OhaPlayer;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.handler.CommandHandler;
 import com.outlook.furkan.dogan.dev.ohachat.util.MapUtil;
+import com.outlook.furkan.dogan.dev.ohachat.util.NmsCommandUtil;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
@@ -74,6 +77,7 @@ public class DefaultChatTierManager implements ChatTierManager {
       !name.equals(DefaultChatTierName.WHISPER)) {
       this.chatTiers.remove(name);
       ConfigFile.deleteChatTier(name);
+      NmsCommandUtil.unregisterCommand(name);
       return true;
     } else {
       return false;
@@ -99,8 +103,14 @@ public class DefaultChatTierManager implements ChatTierManager {
   }
 
   @Override
-  public void loadCustoms() {
+  public void loadCustoms(CommandHandler commandHandler) {
     ConfigFile.loadChatTiers()
-      .forEach(chatTier -> this.chatTiers.put(chatTier.getName(), chatTier));
+      .forEach(chatTier -> {
+        String name = chatTier.getName();
+        this.chatTiers.put(name, chatTier);
+
+        ChannelCommand channelCommand = new ChannelCommand(name, commandHandler);
+        NmsCommandUtil.registerCommand(name, channelCommand);
+      });
   }
 }

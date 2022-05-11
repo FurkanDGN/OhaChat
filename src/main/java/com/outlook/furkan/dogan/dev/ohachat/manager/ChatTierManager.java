@@ -2,6 +2,7 @@ package com.outlook.furkan.dogan.dev.ohachat.manager;
 
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.handler.CommandHandler;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -29,5 +30,5 @@ public interface ChatTierManager {
 
   void loadDefaults();
 
-  void loadCustoms();
+  void loadCustoms(CommandHandler commandHandler);
 }

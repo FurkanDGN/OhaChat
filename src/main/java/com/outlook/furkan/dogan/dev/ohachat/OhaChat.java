@@ -39,14 +39,15 @@ public final class OhaChat extends JavaPlugin {
     ChatTierManager chatTierManager = new DefaultChatTierManager(dataSource);
     PreferencesManager preferencesManager = new DefaultPreferencesManager(dataSource);
     CommandProcessor commandProcessor = new DefaultCommandProcessor(chatTierManager);
+    CommandHandler commandHandler = new DefaultCommandHandler(commandProcessor);
 
     this.loadConfigurationFiles();
     DefaultChatTierName.loadFromConfig();
     dataSource.loadAll();
     chatTierManager.loadDefaults();
-    chatTierManager.loadCustoms();
+    chatTierManager.loadCustoms(commandHandler);
 
-    this.loadPlugin(chatTierManager, commandProcessor, preferencesManager);
+    this.loadPlugin(chatTierManager, commandHandler, preferencesManager);
   }
 
   private void loadConfigurationFiles() {
@@ -55,11 +56,10 @@ public final class OhaChat extends JavaPlugin {
   }
 
   private void loadPlugin(ChatTierManager chatTierManager,
-                          CommandProcessor commandProcessor,
+                          CommandHandler commandHandler,
                           PreferencesManager preferencesManager) {
     ChatTierProcessor chatTierProcessor = new DefaultChatTierProcessor(preferencesManager);
     ChatHandler chatHandler = new DefaultChatHandler(chatTierManager, chatTierProcessor);
-    CommandHandler commandHandler = new DefaultCommandHandler(commandProcessor);
     ChatListener chatListener = new ChatListener(chatHandler);
 
     this.getServer().getPluginManager().registerEvents(chatListener, this);
