@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collections;
+import java.util.Locale;
 
 /**
  * @author Furkan Doğan
@@ -39,75 +40,87 @@ public class OhaAdminCommand implements CommandExecutor {
       return false;
     }
 
-    if (args[0].equalsIgnoreCase("create")) {
-      if (args.length < 3) {
-        MessageUtil.sendMessage(sender, LanguageFile.createCommandUsage);
-        return false;
-      }
+    String operation = args[0].toLowerCase(Locale.ENGLISH);
 
-      String channelName = args[1];
-
-      if (!NamePatterns.CHAT_TIER_NAME.matcher(channelName).matches()) {
-        MessageUtil.sendMessage(sender, LanguageFile.invalidCharacters);
-        return false;
-      }
-
-      ChatTierType channelType = ChatTierType.fromString(args[2]);
-
-      if (channelType == null) {
-        MessageUtil.sendMessage(sender, LanguageFile.invalidChannelType);
-        return false;
-      }
-
-      if (channelType == ChatTierType.LOCAL || channelType == ChatTierType.WHISPER) {
-        if (args.length < 4) {
-          MessageUtil.sendMessage(sender, LanguageFile.invalidRange);
-          return false;
-        }
-
-        String rangeArg = args[3];
-
-        boolean isInteger = NumberUtil.isFloat(rangeArg) || NumberUtil.isInteger(rangeArg);
-        if (!isInteger) {
-          MessageUtil.sendMessage(sender, LanguageFile.invalidRange);
-          return false;
-        }
-
-        double range = Double.parseDouble(rangeArg);
-
-        boolean isSuccess = this.chatTierManager.createChatTier(channelName, channelType, MapUtil.map(ChatTierMetadata.RANGE, range));
-
-        if (isSuccess) {
-          MessageUtil.sendMessage(sender, LanguageFile.channelCreated, new SimpleEntry<>("%channel%", () -> channelName));
-          return true;
-        } else {
-          MessageUtil.sendMessage(sender, LanguageFile.channelAlreadyExists);
-          return false;
-        }
-      } else {
-        this.chatTierManager.createChatTier(channelName, channelType, Collections.emptyMap());
-        MessageUtil.sendMessage(sender, LanguageFile.channelCreated, new SimpleEntry<>("%channel%", () -> channelName));
-      }
-    } else if (args[0].equalsIgnoreCase("delete")) {
-      if (args.length < 2) {
-        MessageUtil.sendMessage(sender, LanguageFile.deleteCommandUsage);
-        return false;
-      }
-
-      String channelName = args[1];
-
-      boolean isDeleted = this.chatTierManager.deleteChatTier(channelName);
-      if (isDeleted) {
-        MessageUtil.sendMessage(sender, LanguageFile.channelDeleted, new SimpleEntry<>("%channel%", () -> channelName));
-        return true;
-      } else {
-        MessageUtil.sendMessage(sender, LanguageFile.channelNotFound, new SimpleEntry<>("%channel%", () -> channelName));
-        return false;
-      }
-    } else {
-      MessageUtil.sendMessage(sender, LanguageFile.pluginCommandUsage);
+    switch (operation) {
+      case "create":
+        return this.handleCreate(sender, args);
+      case "delete":
+        return this.handleDelete(sender, args);
+      default:
+        MessageUtil.sendMessage(sender, LanguageFile.pluginCommandUsage);
     }
 
     return false;
+  }
+
+  private boolean handleCreate(CommandSender sender, String[] args) {
+    if (args.length < 3) {
+      MessageUtil.sendMessage(sender, LanguageFile.createCommandUsage);
+      return false;
+    }
+
+    String channelName = args[1];
+
+    if (!NamePatterns.CHAT_TIER_NAME.matcher(channelName).matches()) {
+      MessageUtil.sendMessage(sender, LanguageFile.invalidCharacters);
+      return false;
+    }
+
+    ChatTierType channelType = ChatTierType.fromString(args[2]);
+
+    if (channelType == null) {
+      MessageUtil.sendMessage(sender, LanguageFile.invalidChannelType);
+      return false;
+    }
+
+    if (channelType != ChatTierType.LOCAL && channelType != ChatTierType.WHISPER) {
+      this.chatTierManager.createChatTier(channelName, channelType, Collections.emptyMap());
+      MessageUtil.sendMessage(sender, LanguageFile.channelCreated, new SimpleEntry<>("%channel%", () -> channelName));
+      return true;
+    } else {
+      if (args.length < 4) {
+        MessageUtil.sendMessage(sender, LanguageFile.invalidRange);
+        return false;
+      }
+
+      String rangeArg = args[3];
+
+      boolean isInteger = NumberUtil.isFloat(rangeArg) || NumberUtil.isInteger(rangeArg);
+      if (!isInteger) {
+        MessageUtil.sendMessage(sender, LanguageFile.invalidRange);
+        return false;
+      }
+
+      double range = Double.parseDouble(rangeArg);
+
+      boolean isSuccess = this.chatTierManager.createChatTier(channelName, channelType, MapUtil.map(ChatTierMetadata.RANGE, range));
+
+      if (isSuccess) {
+        MessageUtil.sendMessage(sender, LanguageFile.channelCreated, new SimpleEntry<>("%channel%", () -> channelName));
+        return true;
+      } else {
+        MessageUtil.sendMessage(sender, LanguageFile.channelAlreadyExists);
+        return false;
+      }
+    }
+  }
+
+  private boolean handleDelete(CommandSender sender, String[] args) {
+    if (args.length < 2) {
+      MessageUtil.sendMessage(sender, LanguageFile.deleteCommandUsage);
+      return false;
+    }
+
+    String channelName = args[1];
+
+    boolean isDeleted = this.chatTierManager.deleteChatTier(channelName);
+    if (isDeleted) {
+      MessageUtil.sendMessage(sender, LanguageFile.channelDeleted, new SimpleEntry<>("%channel%", () -> channelName));
+      return true;
+    } else {
+      MessageUtil.sendMessage(sender, LanguageFile.channelNotFound, new SimpleEntry<>("%channel%", () -> channelName));
+      return false;
+    }
   }
 }
