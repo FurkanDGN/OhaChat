@@ -2,7 +2,7 @@ package com.outlook.furkan.dogan.dev.ohachat.common.datasource.sql;
 
 import com.gmail.furkanaxx34.dlibrary.replaceable.RpString;
 import com.outlook.furkan.dogan.dev.ohachat.common.datasource.DataSource;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.player.OhaPlayer;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.player.OhaPlayer;
 
 import java.io.File;
 import java.sql.Connection;

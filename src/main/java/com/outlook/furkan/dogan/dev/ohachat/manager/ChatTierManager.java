@@ -1,12 +1,9 @@
 package com.outlook.furkan.dogan.dev.ohachat.manager;
 
-import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -25,7 +22,7 @@ public interface ChatTierManager {
 
   void setChatTier(Player player, ChatTier chatTier);
 
-  boolean createChatTier(String name, ChatTierType chatTierType, Map<String, Object> metadata);
+  boolean createChatTier(ChatTier chatTier);
 
   boolean deleteChatTier(String name);
 

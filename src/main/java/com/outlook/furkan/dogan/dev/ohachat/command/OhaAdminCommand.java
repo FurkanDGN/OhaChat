@@ -2,20 +2,21 @@ package com.outlook.furkan.dogan.dev.ohachat.command;
 
 import com.gmail.furkanaxx34.dlibrary.bukkit.utils.NumberUtil;
 import com.outlook.furkan.dogan.dev.ohachat.common.config.LanguageFile;
-import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierMetadata;
-import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.CommandPermission;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.NamePatterns;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.GlobalChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.RangedChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.WorldChatTier;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierCommandManager;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
-import com.outlook.furkan.dogan.dev.ohachat.util.MapUtil;
 import com.outlook.furkan.dogan.dev.ohachat.util.MessageUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.AbstractMap.SimpleEntry;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -25,6 +26,12 @@ import java.util.stream.Collectors;
  * @author Furkan Doğan
  */
 public class OhaAdminCommand implements CommandExecutor {
+
+  private static final List<String> CHAT_TIER_TYPES = Arrays.asList(
+    "global",
+    "world",
+    "ranged"
+  );
 
   private final ChatTierManager chatTierManager;
   private final ChatTierCommandManager chatTierCommandManager;
@@ -76,49 +83,50 @@ public class OhaAdminCommand implements CommandExecutor {
       return false;
     }
 
-    ChatTierType channelType = ChatTierType.fromString(args[2]);
+    String channelType = args[2].toLowerCase(Locale.ENGLISH);
 
-    if (channelType == null) {
+    if (!OhaAdminCommand.CHAT_TIER_TYPES.contains(channelType)) {
       MessageUtil.sendMessage(sender, LanguageFile.invalidChannelType);
       return false;
     }
 
-    if (channelType != ChatTierType.LOCAL && channelType != ChatTierType.WHISPER) {
-      boolean success = this.chatTierManager.createChatTier(channelName, channelType, Collections.emptyMap());
-      if (success) {
-        this.chatTierCommandManager.registerCommand(channelName);
-        MessageUtil.sendMessage(sender, LanguageFile.channelCreated, new SimpleEntry<>("%channel%", () -> channelName));
-        return true;
-      } else {
-        MessageUtil.sendMessage(sender, LanguageFile.channelAlreadyExists);
-        return false;
-      }
+    ChatTier chatTier = null;
+
+    switch (channelType) {
+      case "global":
+        chatTier = new GlobalChatTier(channelName);
+        break;
+      case "world":
+        chatTier = new WorldChatTier(channelName);
+        break;
+      case "ranged":
+        if (args.length < 4) {
+          MessageUtil.sendMessage(sender, LanguageFile.invalidRange);
+          return false;
+        }
+
+        String rangeArg = args[3];
+
+        boolean isInteger = NumberUtil.isFloat(rangeArg) || NumberUtil.isInteger(rangeArg);
+        if (!isInteger) {
+          MessageUtil.sendMessage(sender, LanguageFile.invalidRange);
+          return false;
+        }
+
+        double range = Double.parseDouble(rangeArg);
+
+        chatTier = new RangedChatTier(channelName, range);
+        break;
+    }
+
+    boolean success = this.chatTierManager.createChatTier(chatTier);
+    if (success) {
+      this.chatTierCommandManager.registerCommand(channelName);
+      MessageUtil.sendMessage(sender, LanguageFile.channelCreated, new SimpleEntry<>("%channel%", () -> channelName));
+      return true;
     } else {
-      if (args.length < 4) {
-        MessageUtil.sendMessage(sender, LanguageFile.invalidRange);
-        return false;
-      }
-
-      String rangeArg = args[3];
-
-      boolean isInteger = NumberUtil.isFloat(rangeArg) || NumberUtil.isInteger(rangeArg);
-      if (!isInteger) {
-        MessageUtil.sendMessage(sender, LanguageFile.invalidRange);
-        return false;
-      }
-
-      double range = Double.parseDouble(rangeArg);
-
-      boolean isSuccess = this.chatTierManager.createChatTier(channelName, channelType, MapUtil.map(ChatTierMetadata.RANGE, range));
-
-      if (isSuccess) {
-        this.chatTierCommandManager.registerCommand(channelName);
-        MessageUtil.sendMessage(sender, LanguageFile.channelCreated, new SimpleEntry<>("%channel%", () -> channelName));
-        return true;
-      } else {
-        MessageUtil.sendMessage(sender, LanguageFile.channelAlreadyExists);
-        return false;
-      }
+      MessageUtil.sendMessage(sender, LanguageFile.channelAlreadyExists);
+      return false;
     }
   }
 
@@ -142,18 +150,17 @@ public class OhaAdminCommand implements CommandExecutor {
   }
 
   private boolean handleList(CommandSender sender) {
-    Map<ChatTierType, List<String>> namesByChatTierType = this.chatTierManager.getChatTiers()
+    Map<String, List<String>> namesByChatTierType = this.chatTierManager.getChatTiers()
       .stream()
-      .map(chatTier -> new SimpleEntry<>(chatTier.getChatTierType(), chatTier.getName()))
+      .map(chatTier -> new SimpleEntry<>(chatTier.getType(), chatTier.getName()))
       .collect(Collectors.groupingBy(SimpleEntry::getKey, Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
 
     namesByChatTierType
       .forEach((chatTierType, nameList) -> {
         String names = String.join(", ", nameList);
-        String channelType = chatTierType.name();
 
         MessageUtil.sendMessage(sender, LanguageFile.channelsInfo,
-          new SimpleEntry<>("%channel_type%", () -> channelType),
+          new SimpleEntry<>("%channel_type%", () -> chatTierType),
           new SimpleEntry<>("%count%", () -> String.valueOf(nameList.size())),
           new SimpleEntry<>("%channels%", () -> names)
         );

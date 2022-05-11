@@ -1,7 +1,7 @@
 package com.outlook.furkan.dogan.dev.ohachat.processor;
 
 import com.outlook.furkan.dogan.dev.ohachat.common.config.LanguageFile;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
 import com.outlook.furkan.dogan.dev.ohachat.util.MessageUtil;
 import org.bukkit.entity.Player;

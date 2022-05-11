@@ -2,11 +2,13 @@ package com.outlook.furkan.dogan.dev.ohachat.manager;
 
 import com.outlook.furkan.dogan.dev.ohachat.common.config.ConfigFile;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierMetadata;
-import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
 import com.outlook.furkan.dogan.dev.ohachat.common.datasource.DataSource;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.player.OhaPlayer;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.player.OhaPlayer;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.GlobalChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.RangedChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.WorldChatTier;
 import com.outlook.furkan.dogan.dev.ohachat.util.MapUtil;
 import org.bukkit.entity.Player;
 
@@ -52,11 +54,12 @@ public class DefaultChatTierManager implements ChatTierManager {
   }
 
   @Override
-  public boolean createChatTier(String name, ChatTierType chatTierType, Map<String, Object> metadata) {
+  public boolean createChatTier(ChatTier chatTier) {
+    String name = chatTier.getName();
+
     if (this.chatTiers.containsKey(name)) {
       return false;
     } else {
-      ChatTier chatTier = new ChatTier(name, chatTierType, metadata);
       this.chatTiers.put(name, chatTier);
       ConfigFile.saveChatTier(chatTier);
       return true;
@@ -89,10 +92,10 @@ public class DefaultChatTierManager implements ChatTierManager {
     String localName = DefaultChatTierName.LOCAL;
     String whisperName = DefaultChatTierName.WHISPER;
 
-    ChatTier global = new ChatTier(globalName, ChatTierType.GLOBAL, Collections.emptyMap());
-    ChatTier shout = new ChatTier(shoutName, ChatTierType.SHOUT, Collections.emptyMap());
-    ChatTier local = new ChatTier(localName, ChatTierType.LOCAL, MapUtil.map(ChatTierMetadata.RANGE, ConfigFile.localChannelRange));
-    ChatTier whisper = new ChatTier(whisperName, ChatTierType.WHISPER, MapUtil.map(ChatTierMetadata.RANGE, ConfigFile.whisperChannelRange));
+    ChatTier global = new GlobalChatTier(globalName);
+    ChatTier shout = new WorldChatTier(shoutName);
+    ChatTier local = new RangedChatTier(localName, ConfigFile.localChannelRange);
+    ChatTier whisper = new RangedChatTier(whisperName, ConfigFile.whisperChannelRange);
 
     this.chatTiers.put(globalName, global);
     this.chatTiers.put(shoutName, shout);

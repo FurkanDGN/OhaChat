@@ -1,7 +1,7 @@
 package com.outlook.furkan.dogan.dev.ohachat.common.datasource;
 
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.player.OhaPlayer;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.player.OhaPlayer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

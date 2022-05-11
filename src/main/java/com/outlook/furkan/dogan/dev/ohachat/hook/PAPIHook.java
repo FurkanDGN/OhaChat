@@ -1,6 +1,6 @@
 package com.outlook.furkan.dogan.dev.ohachat.hook;
 
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;

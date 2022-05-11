@@ -1,4 +1,4 @@
-package com.outlook.furkan.dogan.dev.ohachat.common.domain.player;
+package com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.player;
 
 import java.util.Objects;
 import java.util.Set;

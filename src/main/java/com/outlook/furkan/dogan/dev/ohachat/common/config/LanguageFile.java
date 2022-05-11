@@ -54,13 +54,13 @@ public class LanguageFile extends TransformedObject {
   public static RpString alreadyPlayerUnblocked = RpString.from("&eYou have not already blocked this player.")
     .map(XColor::colorize);
 
-  public static RpString createCommandUsage = RpString.from("&7Usage: &e/ohaadmin &7<&ecreate&7> <&echannel name&7> <&eglobal&7/&eshout&7/&elocal&7/&ewhisper&7> <&erange&7>")
+  public static RpString createCommandUsage = RpString.from("&7Usage: &e/ohaadmin &7<&ecreate&7> <&echannel name&7> <&eglobal&7/&eworld&7/&eranged&7> <&erange&7>")
     .map(XColor::colorize);
 
   public static RpString deleteCommandUsage = RpString.from("&7Usage: &e/ohaadmin &7<&edelete&7> <&echannel name&7>")
     .map(XColor::colorize);
 
-  public static RpString pluginCommandUsage = RpString.from("&7Usage: &f/ohaadmin <&ecreate&7/&bdelete&7/&flist&7> <&achannel name&7> <&eglobal&7/&eshout&7/&elocal&7/&ewhisper&7> <&erange&7>")
+  public static RpString pluginCommandUsage = RpString.from("&7Usage: &f/ohaadmin <&ecreate&7/&bdelete&7/&flist&7> <&achannel name&7> <&eglobal&7/&eworld&7/&eranged&7> <&erange&7>")
     .map(XColor::colorize);
 
   public static RpString blockCommandUsage = RpString.from("&7Usage: &e/block &7<&eplayer&7>");

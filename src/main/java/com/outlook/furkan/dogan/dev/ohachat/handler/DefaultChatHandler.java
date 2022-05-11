@@ -1,8 +1,6 @@
 package com.outlook.furkan.dogan.dev.ohachat.handler;
 
-import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.exception.UnsupportedTierException;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
 import com.outlook.furkan.dogan.dev.ohachat.processor.ChatTierProcessor;
 import org.bukkit.entity.Player;
@@ -39,20 +37,6 @@ public class DefaultChatHandler implements ChatHandler {
     Player player = event.getPlayer();
 
     ChatTier chatTier = this.chatTierManager.findChatTier(player);
-    ChatTierType tierType = chatTier.getChatTierType();
-    switch (tierType) {
-      case GLOBAL:
-        this.chatTierProcessor.processGlobal(event, postRecipients);
-        break;
-      case SHOUT:
-        this.chatTierProcessor.processShout(event, postRecipients);
-        break;
-      case LOCAL:
-      case WHISPER:
-        this.chatTierProcessor.processRangedChatTier(event, postRecipients, chatTier);
-        break;
-      default:
-        throw new UnsupportedTierException("Unsupported tier [" + tierType + "] type!");
-    }
+    this.chatTierProcessor.process(player, chatTier, postRecipients);
   }
 }

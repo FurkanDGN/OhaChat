@@ -7,16 +7,22 @@ import com.gmail.furkanaxx34.dlibrary.transformer.annotations.Comment;
 import com.gmail.furkanaxx34.dlibrary.transformer.annotations.Exclude;
 import com.gmail.furkanaxx34.dlibrary.transformer.annotations.Names;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierConfigPath;
-import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
+import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierMetadata;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.NamePatterns;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.exception.UnsupportedTierException;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.GlobalChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.RangedChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.WorldChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.exception.InvalidTypeException;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
-import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -61,7 +67,7 @@ public class ConfigFile extends TransformedObject {
 
   public static void saveChatTier(ChatTier chatTier) {
     String name = chatTier.getName();
-    String chatTierType = chatTier.getChatTierType().name();
+    String chatTierType = chatTier.getType();
     Map<String, Object> metadata = chatTier.getMetadata();
 
     ConfigFile.saveChatTierType(name, chatTierType);
@@ -85,18 +91,28 @@ public class ConfigFile extends TransformedObject {
         return section.getKeys(false)
           .stream()
           .filter(key -> NamePatterns.CHAT_TIER_NAME.matcher(key).matches())
-          .map(key -> {
-            String typePath = String.format(ChatTierConfigPath.TYPE_PATH, key);
-            String metadataSectionPath = String.format(ChatTierConfigPath.METADATA_PATH, key);
-
-            ChatTierType chatTierType = ConfigFile.buildChatTierType(typePath);
-            if (chatTierType == null) {
-              throw new UnsupportedTierException("Incorrect configuration [" + key + "]");
-            }
+          .map(name -> {
+            String typePath = String.format(ChatTierConfigPath.TYPE_PATH, name);
+            String metadataSectionPath = String.format(ChatTierConfigPath.METADATA_PATH, name);
 
             Map<String, Object> metadata = ConfigFile.buildMetadata(metadataSectionPath);
+            String type = (String) ConfigFile.instance.get(typePath).orElseThrow(() -> new InvalidTypeException("Incorrect configuration [" + name + "]"));
+            switch (type) {
+              case "global":
+                return new GlobalChatTier(name);
+              case "world":
+                return new WorldChatTier(name);
+              case "ranged":
+                Object rangeObject = metadata.get(ChatTierMetadata.RANGE);
+                if (rangeObject == null) {
+                  throw new RuntimeException(ChatTierMetadata.RANGE + " is required for ranged chat tier");
+                }
 
-            return new ChatTier(key, chatTierType, metadata);
+                double range = Double.parseDouble(String.valueOf(rangeObject));
+                return new RangedChatTier(name, range);
+              default:
+                throw new InvalidTypeException("Incorrect configuration [" + name + "]");
+            }
           })
           .collect(Collectors.toSet());
       })
@@ -114,11 +130,6 @@ public class ConfigFile extends TransformedObject {
       String metadataValuePath = String.format("%s.%s", metadataPath, key);
       ConfigFile.instance.set(metadataValuePath, value);
     });
-  }
-
-  private static ChatTierType buildChatTierType(String path) {
-    String type = String.valueOf(ConfigFile.instance.get(path).orElse(null));
-    return ChatTierType.fromString(type.toUpperCase(Locale.ENGLISH));
   }
 
   private static Map<String, Object> buildMetadata(String path) {
