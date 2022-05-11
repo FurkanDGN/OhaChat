@@ -118,7 +118,7 @@ public class ConfigFile extends TransformedObject {
 
   private static ChatTierType buildChatTierType(String path) {
     String type = String.valueOf(ConfigFile.instance.get(path).orElse(null));
-    return ChatTierType.fromString(type);
+    return ChatTierType.fromString(type.toUpperCase(Locale.ENGLISH));
   }
 
   private static Map<String, Object> buildMetadata(String path) {
