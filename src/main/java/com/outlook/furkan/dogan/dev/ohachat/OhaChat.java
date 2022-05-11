@@ -14,10 +14,7 @@ import com.outlook.furkan.dogan.dev.ohachat.handler.DefaultChatHandler;
 import com.outlook.furkan.dogan.dev.ohachat.handler.DefaultCommandHandler;
 import com.outlook.furkan.dogan.dev.ohachat.hook.PAPIHook;
 import com.outlook.furkan.dogan.dev.ohachat.listener.ChatListener;
-import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
-import com.outlook.furkan.dogan.dev.ohachat.manager.DefaultChatTierManager;
-import com.outlook.furkan.dogan.dev.ohachat.manager.DefaultPreferencesManager;
-import com.outlook.furkan.dogan.dev.ohachat.manager.PreferencesManager;
+import com.outlook.furkan.dogan.dev.ohachat.manager.*;
 import com.outlook.furkan.dogan.dev.ohachat.processor.ChatTierProcessor;
 import com.outlook.furkan.dogan.dev.ohachat.processor.CommandProcessor;
 import com.outlook.furkan.dogan.dev.ohachat.processor.DefaultChatTierProcessor;
@@ -40,14 +37,15 @@ public final class OhaChat extends JavaPlugin {
     PreferencesManager preferencesManager = new DefaultPreferencesManager(dataSource);
     CommandProcessor commandProcessor = new DefaultCommandProcessor(chatTierManager);
     CommandHandler commandHandler = new DefaultCommandHandler(commandProcessor);
+    ChannelCommandManager channelCommandManager = new DefaultChannelCommandManager(commandHandler);
 
     this.loadConfigurationFiles();
     DefaultChatTierName.loadFromConfig();
     dataSource.loadAll();
     chatTierManager.loadDefaults();
-    chatTierManager.loadCustoms(commandHandler);
+    chatTierManager.loadCustoms();
 
-    this.loadPlugin(chatTierManager, commandHandler, preferencesManager);
+    this.loadPlugin(chatTierManager, commandHandler, preferencesManager, channelCommandManager);
   }
 
   private void loadConfigurationFiles() {
@@ -57,14 +55,15 @@ public final class OhaChat extends JavaPlugin {
 
   private void loadPlugin(ChatTierManager chatTierManager,
                           CommandHandler commandHandler,
-                          PreferencesManager preferencesManager) {
+                          PreferencesManager preferencesManager,
+                          ChannelCommandManager channelCommandManager) {
     ChatTierProcessor chatTierProcessor = new DefaultChatTierProcessor(preferencesManager);
     ChatHandler chatHandler = new DefaultChatHandler(chatTierManager, chatTierProcessor);
     ChatListener chatListener = new ChatListener(chatHandler);
 
     this.getServer().getPluginManager().registerEvents(chatListener, this);
 
-    this.registerCommands(commandHandler, chatTierManager, preferencesManager);
+    this.registerCommands(commandHandler, chatTierManager, preferencesManager, channelCommandManager);
 
     Plugin placeholderAPI = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
     if (placeholderAPI != null) {
@@ -75,7 +74,8 @@ public final class OhaChat extends JavaPlugin {
   @SuppressWarnings("ConstantConditions")
   private void registerCommands(CommandHandler commandHandler,
                                 ChatTierManager chatTierManager,
-                                PreferencesManager preferencesManager) {
+                                PreferencesManager preferencesManager,
+                                ChannelCommandManager channelCommandManager) {
     String global = DefaultChatTierName.GLOBAL;
     String shout = DefaultChatTierName.SHOUT;
     String local = DefaultChatTierName.LOCAL;
@@ -93,11 +93,17 @@ public final class OhaChat extends JavaPlugin {
     NmsCommandUtil.registerCommand(local, localCommand);
     NmsCommandUtil.registerCommand(whisper, whisperCommand);
 
-    OhaAdminCommand ohaAdminCommand = new OhaAdminCommand(chatTierManager);
+    OhaAdminCommand ohaAdminCommand = new OhaAdminCommand(chatTierManager, channelCommandManager);
     this.getCommand("ohaadmin").setExecutor(ohaAdminCommand);
 
     BlockCommand blockCommand = new BlockCommand(preferencesManager);
     this.getCommand("block").setExecutor(blockCommand);
     this.getCommand("unblock").setExecutor(blockCommand);
+
+    ConfigFile.loadChatTiers()
+      .forEach(chatTier -> {
+        String name = chatTier.getName();
+        channelCommandManager.registerCommand(name);
+      });
   }
 }
