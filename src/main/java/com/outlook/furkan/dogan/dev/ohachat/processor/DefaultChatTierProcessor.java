@@ -39,7 +39,6 @@ public class DefaultChatTierProcessor implements ChatTierProcessor {
   @Override
   public void processShout(PlayerChatEvent event, Set<Player> postRecipients) {
     Player sender = event.getPlayer();
-
     this.findSameWorldRecipients(sender, postRecipients, player -> true);
   }
 

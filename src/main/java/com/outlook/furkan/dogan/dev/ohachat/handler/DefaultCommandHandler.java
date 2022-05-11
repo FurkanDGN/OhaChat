@@ -37,9 +37,9 @@ public class DefaultCommandHandler implements CommandHandler {
       if (!process && startsWith) {
         MessageUtil.sendMessage(player, LanguageFile.channelNotFound, new SimpleEntry<>("%channel%", () -> channel));
         return false;
+      } else {
+        return process;
       }
-
-      return process;
     } else {
       return false;
     }

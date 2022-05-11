@@ -37,12 +37,12 @@ public class DefaultPreferencesManager implements PreferencesManager {
     Set<String> blacklist = ohaPlayer.getBlacklist();
     if (blacklist.contains(target)) {
       return false;
+    } else {
+      blacklist.add(target);
+
+      this.dataSource.save(ohaPlayer);
+      return true;
     }
-
-    blacklist.add(target);
-
-    this.dataSource.save(ohaPlayer);
-    return true;
   }
 
   @Override
@@ -53,10 +53,11 @@ public class DefaultPreferencesManager implements PreferencesManager {
     Set<String> blacklist = ohaPlayer.getBlacklist();
     if (!blacklist.contains(target)) {
       return false;
-    }
-    blacklist.remove(target);
+    } else {
+      blacklist.remove(target);
 
-    this.dataSource.save(ohaPlayer);
-    return true;
+      this.dataSource.save(ohaPlayer);
+      return true;
+    }
   }
 }

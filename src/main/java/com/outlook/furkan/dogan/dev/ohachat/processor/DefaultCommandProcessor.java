@@ -23,21 +23,23 @@ public class DefaultCommandProcessor implements CommandProcessor {
   public boolean process(Player player, String channel, String message) {
     ChatTier chatTier = this.chatTierManager.getChatTier(channel);
 
-    if (chatTier != null) {
-      ChatTier oldChatTier = this.chatTierManager.findChatTier(player);
-
-      this.chatTierManager.setChatTier(player, chatTier);
-
-      if (message != null && !message.isEmpty()) {
-        player.chat(message);
-        this.chatTierManager.setChatTier(player, oldChatTier);
-      } else {
-        MessageUtil.sendMessage(player, LanguageFile.channelSet, new SimpleEntry<>("%channel%", () -> channel));
-      }
-
-      return true;
-    } else {
+    if (chatTier == null) {
       return false;
+    } else {
+      this.chatTierManager.setChatTier(player, chatTier);
+      this.processMessage(player, channel, message);
+      return true;
+    }
+  }
+
+  private void processMessage(Player player, String channel, String message) {
+    ChatTier oldChatTier = this.chatTierManager.findChatTier(player);
+
+    if (message == null || message.isEmpty()) {
+      MessageUtil.sendMessage(player, LanguageFile.channelSet, new SimpleEntry<>("%channel%", () -> channel));
+    } else {
+      player.chat(message);
+      this.chatTierManager.setChatTier(player, oldChatTier);
     }
   }
 }
