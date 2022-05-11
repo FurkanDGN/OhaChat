@@ -11,7 +11,7 @@ A Minecraft plugin that provides chat channels for players to use.
 > All messages sent to this channel are **only seen to people in the world where the sender is**.
 
 ### Local
-> All messages sent to this channel can **only be seen by people close to 20 **(can be changed in config.yml) **blocks**.
+> All messages sent to this channel can **only be seen by people close to 20** (can be changed in config.yml) **blocks**.
 
 ### Whisper
 > All messages sent to this channel can **only be seen by people close to 3 (can be changed in config.yml) blocks**.
