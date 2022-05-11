@@ -45,7 +45,7 @@ public class LanguageFile extends TransformedObject {
     .map(XColor::colorize);
 
   public static RpString channelsInfo = RpString.from("&d%channel_type% (%count%): &f%channels%")
-      .regex("%channel_type%", "%count%", "%channels%")
+    .regex("%channel_type%", "%count%", "%channels%")
     .map(XColor::colorize);
 
   public static RpString alreadyPlayerBlocked = RpString.from("&eYou have already blocked this player.")
