@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 public abstract class SQLSource extends DataSource {
 
   private static final String TABLE_NAME = "oha_players";
-  private final Connection connection;
   protected final File file;
+  private final Connection connection;
 
   public SQLSource(File file) {
     this.file = file;
@@ -152,19 +152,15 @@ public abstract class SQLSource extends DataSource {
     public static final RpString SELECT_ALL = RpString.from(
       "SELECT * FROM %table;"
     ).regex("%table");
-
-    public static RpString SELECT_WHERE = RpString.from(
-      "SELECT %identifier FROM %table WHERE %where;"
-    ).regex("%identifier", "%table", "%where");
-
     public static final RpString SELECT = RpString.from(
       "SELECT %identifier FROM %table WHERE unique_id=?;"
     ).regex("%identifier", "%table");
-
     public static final RpString UPDATE = RpString.from(
       "UPDATE %table SET %column=? WHERE unique_id=?;"
     ).regex("%table", "%column");
-
+    public static RpString SELECT_WHERE = RpString.from(
+      "SELECT %identifier FROM %table WHERE %where;"
+    ).regex("%identifier", "%table", "%where");
     public static RpString DELETE = RpString.from(
       "DELETE FROM %table WHERE unique_id=?;"
     ).regex("%table");
