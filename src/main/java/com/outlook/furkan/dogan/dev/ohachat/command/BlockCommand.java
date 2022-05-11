@@ -36,8 +36,8 @@ public class BlockCommand implements CommandExecutor {
 
       String target = args[0];
       Player player = ((Player) sender).getPlayer();
-      boolean success = this.preferencesManager.blockPlayer(player, target);
 
+      boolean success = this.preferencesManager.blockPlayer(player, target);
       if (success) {
         MessageUtil.sendMessage(sender, LanguageFile.playerBlocked, new SimpleEntry<>("%player%", () -> target));
       } else {
@@ -51,8 +51,8 @@ public class BlockCommand implements CommandExecutor {
 
       String target = args[0];
       Player player = ((Player) sender).getPlayer();
-      boolean success = this.preferencesManager.unblockPlayer(player, target);
 
+      boolean success = this.preferencesManager.unblockPlayer(player, target);
       if (success) {
         MessageUtil.sendMessage(sender, LanguageFile.playerUnblocked, new SimpleEntry<>("%player%", () -> target));
       } else {
