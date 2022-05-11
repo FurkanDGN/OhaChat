@@ -20,7 +20,7 @@ public abstract class SQLSource extends DataSource {
 
   private static final String TABLE_NAME = "oha_players";
   private final Connection connection;
-  protected File file;
+  protected final File file;
 
   public SQLSource(File file) {
     this.file = file;
@@ -133,7 +133,7 @@ public abstract class SQLSource extends DataSource {
 
   public static final class Query {
 
-    public static RpString CREATE_TABLE = RpString.from(
+    public static final RpString CREATE_TABLE = RpString.from(
       "CREATE TABLE IF NOT EXISTS %table (" +
         "unique_id VARCHAR(70) NOT NULL," +
         "blacklist VARCHAR(9999) NOT NULL," +
@@ -141,7 +141,7 @@ public abstract class SQLSource extends DataSource {
         "UNIQUE (unique_id));"
     ).regex("%table");
 
-    public static RpString INSERT = RpString.from(
+    public static final RpString INSERT = RpString.from(
       "INSERT INTO %table (" +
         " unique_id," +
         " blacklist," +
@@ -149,7 +149,7 @@ public abstract class SQLSource extends DataSource {
         ") VALUES (?, ?, ?);"
     ).regex("%table");
 
-    public static RpString SELECT_ALL = RpString.from(
+    public static final RpString SELECT_ALL = RpString.from(
       "SELECT * FROM %table;"
     ).regex("%table");
 
@@ -157,11 +157,11 @@ public abstract class SQLSource extends DataSource {
       "SELECT %identifier FROM %table WHERE %where;"
     ).regex("%identifier", "%table", "%where");
 
-    public static RpString SELECT = RpString.from(
+    public static final RpString SELECT = RpString.from(
       "SELECT %identifier FROM %table WHERE unique_id=?;"
     ).regex("%identifier", "%table");
 
-    public static RpString UPDATE = RpString.from(
+    public static final RpString UPDATE = RpString.from(
       "UPDATE %table SET %column=? WHERE unique_id=?;"
     ).regex("%table", "%column");
 
