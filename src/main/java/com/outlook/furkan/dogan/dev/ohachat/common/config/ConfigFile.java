@@ -14,10 +14,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.AbstractMap.SimpleEntry;
 
 /**
  * @author Furkan Doğan
@@ -55,6 +53,7 @@ public class ConfigFile extends TransformedObject {
         .withFile(new File(plugin.getDataFolder(), "config.yml"))
         .withResolver(new BukkitSnakeyaml());
     }
+
     ConfigFile.instance.initiate();
   }
 
@@ -64,13 +63,14 @@ public class ConfigFile extends TransformedObject {
     Map<String, Object> metadata = chatTier.getMetadata();
 
     String typePath = String.format(ChatTierConfigPath.TYPE_PATH, name);
-
     ConfigFile.instance.set(typePath, chatTierType);
+
     metadata.forEach((key, value) -> {
       String metadataPath = String.format(ChatTierConfigPath.METADATA_PATH, name);
       String metadataValuePath = String.format("%s.%s", metadataPath, key);
       ConfigFile.instance.set(metadataValuePath, value);
     });
+
     ConfigFile.instance.save();
   }
 
@@ -89,27 +89,38 @@ public class ConfigFile extends TransformedObject {
       if (!NamePatterns.CHAT_TIER_NAME.matcher(key).matches()) continue;
 
       String typePath = String.format(ChatTierConfigPath.TYPE_PATH, key);
-      String type = String.valueOf(ConfigFile.instance.get(typePath).orElse(null));
-      ChatTierType chatTierType = ChatTierType.fromString(type);
-      if (chatTierType == null) continue;
-
       String metadataSectionPath = String.format(ChatTierConfigPath.METADATA_PATH, key);
 
-      Map<String, Object> metadata = new HashMap<>();
-      ConfigurationSection section = (ConfigurationSection) ConfigFile.instance.get(metadataSectionPath).orElse(null);
-      if (section != null) {
-        section.getKeys(false)
-          .forEach(sectionKey -> {
-            String metadataPath = String.format("%s.%s", metadataSectionPath, sectionKey);
-            Object value = ConfigFile.instance.get(metadataPath).orElse(null);
-            metadata.put(sectionKey, value);
-          });
-      }
+      ChatTierType chatTierType = ConfigFile.buildChatTierType(typePath);
+      if (chatTierType == null) continue;
+
+      Map<String, Object> metadata = ConfigFile.buildMetadata(metadataSectionPath);
 
       ChatTier chatTier = new ChatTier(key, chatTierType, metadata);
       chatTiers.add(chatTier);
     }
 
     return chatTiers;
+  }
+
+  private static ChatTierType buildChatTierType(String path) {
+    String type = String.valueOf(ConfigFile.instance.get(path).orElse(null));
+    return ChatTierType.fromString(type);
+  }
+
+  private static Map<String, Object> buildMetadata(String path) {
+    ConfigurationSection section = (ConfigurationSection) ConfigFile.instance.get(path).orElse(null);
+    if (section != null) {
+      return section.getKeys(false)
+        .stream()
+        .map(key -> {
+          String metadataPath = String.format("%s.%s", path, key);
+          Object value = ConfigFile.instance.get(metadataPath).orElse(null);
+          return new SimpleEntry<>(key, value);
+        })
+        .collect(HashMap::new, (map, entry) -> map.put(entry.getKey(), entry.getValue()), Map::putAll);
+    } else {
+      return Collections.emptyMap();
+    }
   }
 }
