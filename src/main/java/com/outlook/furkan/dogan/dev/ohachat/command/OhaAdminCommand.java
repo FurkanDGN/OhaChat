@@ -16,7 +16,10 @@ import org.bukkit.command.CommandSender;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Furkan Doğan
@@ -52,6 +55,8 @@ public class OhaAdminCommand implements CommandExecutor {
         return this.handleCreate(sender, args);
       case "delete":
         return this.handleDelete(sender, args);
+      case "list":
+        return this.handleList(sender);
       default:
         MessageUtil.sendMessage(sender, LanguageFile.pluginCommandUsage);
         return false;
@@ -129,5 +134,26 @@ public class OhaAdminCommand implements CommandExecutor {
       MessageUtil.sendMessage(sender, LanguageFile.channelNotFound, new SimpleEntry<>("%channel%", () -> channelName));
       return false;
     }
+  }
+
+  private boolean handleList(CommandSender sender) {
+    Map<ChatTierType, List<String>> namesByChatTierType = this.chatTierManager.getChatTiers()
+      .stream()
+      .map(chatTier -> new SimpleEntry<>(chatTier.getChatTierType(), chatTier.getName()))
+      .collect(Collectors.groupingBy(SimpleEntry::getKey, Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
+
+    namesByChatTierType
+      .forEach((chatTierType, nameList) -> {
+        String names = String.join(", ", nameList);
+        String channelType = chatTierType.name();
+
+        MessageUtil.sendMessage(sender, LanguageFile.channelsInfo,
+          new SimpleEntry<>("%channel_type%", () -> channelType),
+          new SimpleEntry<>("%count%", () -> String.valueOf(nameList.size())),
+          new SimpleEntry<>("%channels%", () -> names)
+        );
+      });
+
+    return true;
   }
 }

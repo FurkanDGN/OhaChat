@@ -26,22 +26,22 @@ import java.util.stream.Collectors;
 public class ConfigFile extends TransformedObject {
 
   @Comment("Name of global channel")
-  public static final String globalChannelName = "global";
+  public static String globalChannelName = "global";
 
   @Comment("Name of shout channel")
-  public static final String shoutChannelName = "shout";
+  public static String shoutChannelName = "shout";
 
   @Comment("Name of local channel")
-  public static final String localChannelName = "local";
+  public static String localChannelName = "local";
 
   @Comment("Range of local channel")
-  public static final double localChannelRange = 20.0D;
+  public static double localChannelRange = 20.0D;
 
   @Comment("Name of whisper channel")
-  public static final String whisperChannelName = "whisper";
+  public static String whisperChannelName = "whisper";
 
   @Comment("Range of whisper channel")
-  public static final double whisperChannelRange = 3.0D;
+  public static double whisperChannelRange = 3.0D;
 
   @Exclude
   private static TransformedObject instance;

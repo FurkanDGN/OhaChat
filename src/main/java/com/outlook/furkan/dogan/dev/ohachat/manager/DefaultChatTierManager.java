@@ -10,10 +10,7 @@ import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
 import com.outlook.furkan.dogan.dev.ohachat.util.MapUtil;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -78,6 +75,11 @@ public class DefaultChatTierManager implements ChatTierManager {
     } else {
       return false;
     }
+  }
+
+  @Override
+  public Collection<ChatTier> getChatTiers() {
+    return Collections.unmodifiableCollection(this.chatTiers.values());
   }
 
   @Override

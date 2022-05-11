@@ -20,4 +20,10 @@ public class MessageUtil {
     String message = rpString.build(placeholder);
     sender.sendMessage(message);
   }
+
+  @SafeVarargs
+  public static void sendMessage(CommandSender sender, RpString rpString, Entry<String, Supplier<String>>... placeholders) {
+    String message = rpString.build(placeholders);
+    sender.sendMessage(message);
+  }
 }
