@@ -33,13 +33,15 @@ public class OhaAdminCommand implements CommandExecutor {
     if (!sender.hasPermission(CommandPermission.ADMIN_COMMAND_PERMISSION)) {
       MessageUtil.sendMessage(sender, LanguageFile.noPermission);
       return false;
-    }
-
-    if (args.length == 0) {
+    } else if (args.length == 0) {
       MessageUtil.sendMessage(sender, LanguageFile.pluginCommandUsage);
       return false;
+    } else {
+      return this.handleCommand(sender, args);
     }
+  }
 
+  private boolean handleCommand(CommandSender sender, String[] args) {
     String operation = args[0].toLowerCase(Locale.ENGLISH);
 
     switch (operation) {
@@ -49,9 +51,8 @@ public class OhaAdminCommand implements CommandExecutor {
         return this.handleDelete(sender, args);
       default:
         MessageUtil.sendMessage(sender, LanguageFile.pluginCommandUsage);
+        return false;
     }
-
-    return false;
   }
 
   private boolean handleCreate(CommandSender sender, String[] args) {
