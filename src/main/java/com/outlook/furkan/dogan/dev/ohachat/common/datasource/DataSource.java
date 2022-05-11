@@ -1,7 +1,7 @@
 package com.outlook.furkan.dogan.dev.ohachat.common.datasource;
 
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.OhaPlayer;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.player.OhaPlayer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,9 +18,7 @@ public abstract class DataSource {
   }
 
   public final void loadAll() {
-    this.getAll().forEach(ohaPlayer -> {
-      DataSource.OHA_PLAYER_BY_UUID.put(ohaPlayer.getUniqueId(), ohaPlayer);
-    });
+    this.getAll().forEach(ohaPlayer -> DataSource.OHA_PLAYER_BY_UUID.put(ohaPlayer.getUniqueId(), ohaPlayer));
   }
 
   public final OhaPlayer getPlayer(UUID uuid) {
