@@ -15,11 +15,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -81,24 +78,29 @@ public class ConfigFile extends TransformedObject {
   }
 
   public static Set<ChatTier> loadChatTiers() {
-    return ConfigFile.instance.getAllKeys()
-      .stream()
-      .filter(key -> !key.equals(ChatTierConfigPath.PARENT_PATH))
-      .filter(key -> !NamePatterns.CHAT_TIER_NAME.matcher(key).matches())
-      .map(key -> {
-        String typePath = String.format(ChatTierConfigPath.TYPE_PATH, key);
-        String metadataSectionPath = String.format(ChatTierConfigPath.METADATA_PATH, key);
+    return ConfigFile.instance.get(ChatTierConfigPath.PARENT_PATH)
+      .map(o -> {
+        ConfigurationSection section = (ConfigurationSection) o;
 
-        ChatTierType chatTierType = ConfigFile.buildChatTierType(typePath);
-        if (chatTierType == null) {
-          throw new UnsupportedTierException("Incorrect configuration [" + key + "]");
-        }
+        return section.getKeys(false)
+          .stream()
+          .filter(key -> NamePatterns.CHAT_TIER_NAME.matcher(key).matches())
+          .map(key -> {
+            String typePath = String.format(ChatTierConfigPath.TYPE_PATH, key);
+            String metadataSectionPath = String.format(ChatTierConfigPath.METADATA_PATH, key);
 
-        Map<String, Object> metadata = ConfigFile.buildMetadata(metadataSectionPath);
+            ChatTierType chatTierType = ConfigFile.buildChatTierType(typePath);
+            if (chatTierType == null) {
+              throw new UnsupportedTierException("Incorrect configuration [" + key + "]");
+            }
 
-        return new ChatTier(key, chatTierType, metadata);
+            Map<String, Object> metadata = ConfigFile.buildMetadata(metadataSectionPath);
+
+            return new ChatTier(key, chatTierType, metadata);
+          })
+          .collect(Collectors.toSet());
       })
-      .collect(Collectors.toSet());
+      .orElse(Collections.emptySet());
   }
 
   private static void saveChatTierType(String name, String type) {
