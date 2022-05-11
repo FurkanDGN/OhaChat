@@ -10,12 +10,14 @@ import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierConfigPath;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.NamePatterns;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.exception.UnsupportedTierException;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.stream.Collectors;
 
 /**
  * @author Furkan Doğan
@@ -76,25 +78,24 @@ public class ConfigFile extends TransformedObject {
   }
 
   public static Set<ChatTier> loadChatTiers() {
-    Set<ChatTier> chatTiers = new HashSet<>();
+    return ConfigFile.instance.getAllKeys()
+      .stream()
+      .filter(key -> !key.equals(ChatTierConfigPath.PARENT_PATH))
+      .filter(key -> !NamePatterns.CHAT_TIER_NAME.matcher(key).matches())
+      .map(key -> {
+        String typePath = String.format(ChatTierConfigPath.TYPE_PATH, key);
+        String metadataSectionPath = String.format(ChatTierConfigPath.METADATA_PATH, key);
 
-    for (String key : ConfigFile.instance.getAllKeys()) {
-      if (!key.equals(ChatTierConfigPath.PARENT_PATH)) continue;
-      if (!NamePatterns.CHAT_TIER_NAME.matcher(key).matches()) continue;
+        ChatTierType chatTierType = ConfigFile.buildChatTierType(typePath);
+        if (chatTierType == null) {
+          throw new UnsupportedTierException("Incorrect configuration [" + key + "]");
+        }
 
-      String typePath = String.format(ChatTierConfigPath.TYPE_PATH, key);
-      String metadataSectionPath = String.format(ChatTierConfigPath.METADATA_PATH, key);
+        Map<String, Object> metadata = ConfigFile.buildMetadata(metadataSectionPath);
 
-      ChatTierType chatTierType = ConfigFile.buildChatTierType(typePath);
-      if (chatTierType == null) continue;
-
-      Map<String, Object> metadata = ConfigFile.buildMetadata(metadataSectionPath);
-
-      ChatTier chatTier = new ChatTier(key, chatTierType, metadata);
-      chatTiers.add(chatTier);
-    }
-
-    return chatTiers;
+        return new ChatTier(key, chatTierType, metadata);
+      })
+      .collect(Collectors.toSet());
   }
 
   private static void saveChatTierType(String name, String type) {
