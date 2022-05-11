@@ -44,6 +44,7 @@ public final class OhaChat extends JavaPlugin {
     DefaultChatTierName.loadFromConfig();
     dataSource.loadAll();
     chatTierManager.loadDefaults();
+    chatTierManager.loadCustoms();
     this.loadPlugin(chatTierManager, commandProcessor, preferencesManager);
   }
 

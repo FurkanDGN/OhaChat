@@ -5,6 +5,7 @@ import com.outlook.furkan.dogan.dev.ohachat.common.config.LanguageFile;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierMetadata;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.CommandPermission;
+import com.outlook.furkan.dogan.dev.ohachat.common.constant.NamePatterns;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
 import com.outlook.furkan.dogan.dev.ohachat.util.MapUtil;
 import com.outlook.furkan.dogan.dev.ohachat.util.MessageUtil;
@@ -14,14 +15,11 @@ import org.bukkit.command.CommandSender;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collections;
-import java.util.regex.Pattern;
 
 /**
  * @author Furkan Doğan
  */
 public class OhaAdminCommand implements CommandExecutor {
-
-  private final static Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z\\d]+");
 
   private final ChatTierManager chatTierManager;
 
@@ -49,7 +47,7 @@ public class OhaAdminCommand implements CommandExecutor {
 
       String channelName = args[1];
 
-      if (!OhaAdminCommand.NAME_PATTERN.matcher(channelName).matches()) {
+      if (!NamePatterns.CHAT_TIER_NAME.matcher(channelName).matches()) {
         MessageUtil.sendMessage(sender, LanguageFile.invalidCharacters);
         return false;
       }

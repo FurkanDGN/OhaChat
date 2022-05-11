@@ -6,9 +6,18 @@ import com.gmail.furkanaxx34.dlibrary.transformer.TransformerPool;
 import com.gmail.furkanaxx34.dlibrary.transformer.annotations.Comment;
 import com.gmail.furkanaxx34.dlibrary.transformer.annotations.Exclude;
 import com.gmail.furkanaxx34.dlibrary.transformer.annotations.Names;
+import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierConfigPath;
+import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierType;
+import com.outlook.furkan.dogan.dev.ohachat.common.constant.NamePatterns;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.ChatTier;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Furkan Doğan
@@ -28,11 +37,13 @@ public class ConfigFile extends TransformedObject {
   @Comment("Name of local channel")
   public static String localChannelName = "local";
 
+  @Comment("Range of local channel")
   public static double localChannelRange = 20.0D;
 
   @Comment("Name of whisper channel")
   public static String whisperChannelName = "whisper";
 
+  @Comment("Range of whisper channel")
   public static double whisperChannelRange = 3.0D;
 
   private ConfigFile() {
@@ -45,5 +56,60 @@ public class ConfigFile extends TransformedObject {
         .withResolver(new BukkitSnakeyaml());
     }
     ConfigFile.instance.initiate();
+  }
+
+  public static void saveChatTier(ChatTier chatTier) {
+    String name = chatTier.getName();
+    String chatTierType = chatTier.getChatTierType().name();
+    Map<String, Object> metadata = chatTier.getMetadata();
+
+    String typePath = String.format(ChatTierConfigPath.TYPE_PATH, name);
+
+    ConfigFile.instance.set(typePath, chatTierType);
+    metadata.forEach((key, value) -> {
+      String metadataPath = String.format(ChatTierConfigPath.METADATA_PATH, name);
+      String metadataValuePath = String.format("%s.%s", metadataPath, key);
+      ConfigFile.instance.set(metadataValuePath, value);
+    });
+    ConfigFile.instance.save();
+  }
+
+  public static void deleteChatTier(String name) {
+    String path = String.format(ChatTierConfigPath.NAME_PATH, name);
+
+    ConfigFile.instance.remove(path);
+    ConfigFile.instance.save();
+  }
+
+  public static Set<ChatTier> loadChatTiers() {
+    Set<ChatTier> chatTiers = new HashSet<>();
+
+    for (String key : ConfigFile.instance.getAllKeys()) {
+      if (!key.equals(ChatTierConfigPath.PARENT_PATH)) continue;
+      if (!NamePatterns.CHAT_TIER_NAME.matcher(key).matches()) continue;
+
+      String typePath = String.format(ChatTierConfigPath.TYPE_PATH, key);
+      String type = String.valueOf(ConfigFile.instance.get(typePath).orElse(null));
+      ChatTierType chatTierType = ChatTierType.fromString(type);
+      if (chatTierType == null) continue;
+
+      String metadataSectionPath = String.format(ChatTierConfigPath.METADATA_PATH, key);
+
+      Map<String, Object> metadata = new HashMap<>();
+      ConfigurationSection section = (ConfigurationSection) ConfigFile.instance.get(metadataSectionPath).orElse(null);
+      if (section != null) {
+        section.getKeys(false)
+          .forEach(sectionKey -> {
+            String metadataPath = String.format("%s.%s", metadataSectionPath, sectionKey);
+            Object value = ConfigFile.instance.get(metadataPath).orElse(null);
+            metadata.put(sectionKey, value);
+          });
+      }
+
+      ChatTier chatTier = new ChatTier(key, chatTierType, metadata);
+      chatTiers.add(chatTier);
+    }
+
+    return chatTiers;
   }
 }

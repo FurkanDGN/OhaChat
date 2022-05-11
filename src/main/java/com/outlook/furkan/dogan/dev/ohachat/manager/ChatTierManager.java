@@ -28,4 +28,6 @@ public interface ChatTierManager {
   boolean deleteChatTier(String name);
 
   void loadDefaults();
+
+  void loadCustoms();
 }

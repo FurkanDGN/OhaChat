@@ -61,6 +61,7 @@ public class DefaultChatTierManager implements ChatTierManager {
     } else {
       ChatTier chatTier = new ChatTier(name, chatTierType, metadata);
       this.chatTiers.put(name, chatTier);
+      ConfigFile.saveChatTier(chatTier);
       return true;
     }
   }
@@ -72,6 +73,7 @@ public class DefaultChatTierManager implements ChatTierManager {
       !name.equals(DefaultChatTierName.LOCAL) &&
       !name.equals(DefaultChatTierName.WHISPER)) {
       this.chatTiers.remove(name);
+      ConfigFile.deleteChatTier(name);
       return true;
     } else {
       return false;
@@ -94,5 +96,11 @@ public class DefaultChatTierManager implements ChatTierManager {
     this.chatTiers.put(shoutName, shout);
     this.chatTiers.put(localName, local);
     this.chatTiers.put(whisperName, whisper);
+  }
+
+  @Override
+  public void loadCustoms() {
+    ConfigFile.loadChatTiers()
+      .forEach(chatTier -> this.chatTiers.put(chatTier.getName(), chatTier));
   }
 }
