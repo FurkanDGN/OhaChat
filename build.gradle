@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.outlook.furkan.dogan'
-version = '1.0'
+version = '1.1.1'
 
 repositories {
     mavenLocal()
@@ -55,7 +55,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 shadowJar {
-    archiveFileName.set("${project.name}.jar")
+    archiveFileName.set("${project.name}-${project.version}.jar")
     exclude 'META-INF/**'
     exclude '**/MANIFEST.MF'
     relocate 'co.aikar.commands', "com.outlook.furkan.dogan.dev.${project.name.toLowerCase(Locale.ENGLISH)}.acf"
