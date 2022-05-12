@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -42,5 +43,28 @@ public class RangedChatTier extends ChatTier {
       .stream()
       .filter(worldPlayer -> !worldPlayer.getUniqueId().equals(uniqueId))
       .filter(worldPlayer -> worldPlayer.getLocation().distance(location) <= this.range);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || this.getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
+    RangedChatTier that = (RangedChatTier) o;
+    return Double.compare(that.range, this.range) == 0 && this.metadata.equals(that.metadata);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), this.metadata, this.range);
+  }
+
+  @Override
+  public String toString() {
+    return "RangedChatTier{" +
+      "metadata=" + this.metadata +
+      ", range=" + this.range +
+      ", name='" + this.name + '\'' +
+      '}';
   }
 }
