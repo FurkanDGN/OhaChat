@@ -102,8 +102,8 @@ public class OhaAdminCommand implements CommandExecutor {
 
         String rangeArg = args[3];
 
-        boolean isInteger = NumberUtil.isFloat(rangeArg) || NumberUtil.isInteger(rangeArg);
-        if (!isInteger) {
+        boolean isNumber = NumberUtil.isFloat(rangeArg) || NumberUtil.isInteger(rangeArg);
+        if (!isNumber) {
           MessageUtil.sendMessage(sender, LanguageFile.invalidRange);
           return false;
         }
