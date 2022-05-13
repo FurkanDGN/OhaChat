@@ -3,11 +3,9 @@ package com.outlook.furkan.dogan.dev.ohachat.command;
 import com.gmail.furkanaxx34.dlibrary.bukkit.utils.NumberUtil;
 import com.outlook.furkan.dogan.dev.ohachat.common.config.LanguageFile;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.CommandPermission;
+import com.outlook.furkan.dogan.dev.ohachat.common.constant.Metadata;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.NamePatterns;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.GlobalChatTier;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.RangedChatTier;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.WorldChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierCommandManager;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
 import com.outlook.furkan.dogan.dev.ohachat.util.MessageUtil;
@@ -15,11 +13,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -90,14 +85,14 @@ public class OhaAdminCommand implements CommandExecutor {
       return false;
     }
 
-    ChatTier chatTier = null;
+    Map<String, Object> metadata = new HashMap<>();
 
     switch (channelType) {
       case "global":
-        chatTier = new GlobalChatTier(channelName);
+        metadata.put(Metadata.TYPE, ChatTierType.GLOBAL);
         break;
       case "world":
-        chatTier = new WorldChatTier(channelName);
+        metadata.put(Metadata.TYPE, ChatTierType.WORLD);
         break;
       case "ranged":
         if (args.length < 4) {
@@ -115,11 +110,12 @@ public class OhaAdminCommand implements CommandExecutor {
 
         double range = Double.parseDouble(rangeArg);
 
-        chatTier = new RangedChatTier(channelName, range);
+        metadata.put(Metadata.TYPE, ChatTierType.RANGED);
+        metadata.put(Metadata.RANGE, range);
         break;
     }
 
-    boolean success = this.chatTierManager.createChatTier(chatTier);
+    boolean success = this.chatTierManager.createChannel(channelName, metadata);
     if (success) {
       this.chatTierCommandManager.registerCommand(channelName);
       MessageUtil.sendMessage(sender, LanguageFile.channelCreated, new SimpleEntry<>("%channel%", () -> channelName));
@@ -138,7 +134,7 @@ public class OhaAdminCommand implements CommandExecutor {
 
     String channelName = args[1];
 
-    boolean isDeleted = this.chatTierManager.deleteChatTier(channelName);
+    boolean isDeleted = this.chatTierManager.deleteChannel(channelName);
     if (isDeleted) {
       this.chatTierCommandManager.unregisterCommand(channelName);
       MessageUtil.sendMessage(sender, LanguageFile.channelDeleted, new SimpleEntry<>("%channel%", () -> channelName));
@@ -150,9 +146,14 @@ public class OhaAdminCommand implements CommandExecutor {
   }
 
   private boolean handleList(CommandSender sender) {
-    Map<String, List<String>> namesByChatTierType = this.chatTierManager.getChatTiers()
+    Map<String, List<String>> namesByChatTierType = this.chatTierManager.getChannels()
       .stream()
-      .map(chatTier -> new SimpleEntry<>(chatTier.getType(), chatTier.getName()))
+      .map(channel -> {
+        Map<String, Object> channelMetadata = this.chatTierManager.getChannelMetadata(channel);
+        ChatTierType chatTierType = (ChatTierType) channelMetadata.get(Metadata.TYPE);
+
+        return new SimpleEntry<>(chatTierType.name(), channel);
+      })
       .collect(Collectors.groupingBy(SimpleEntry::getKey, Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
 
     namesByChatTierType

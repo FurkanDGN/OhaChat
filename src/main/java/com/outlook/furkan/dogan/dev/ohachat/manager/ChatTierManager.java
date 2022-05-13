@@ -1,9 +1,10 @@
 package com.outlook.furkan.dogan.dev.ohachat.manager;
 
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTierType;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -11,22 +12,26 @@ import java.util.UUID;
  */
 public interface ChatTierManager {
 
-  ChatTier findChatTier(UUID uniqueId);
+  ChatTierType findChatTierType(UUID uniqueId);
 
-  default ChatTier findChatTier(Player player) {
+  default ChatTierType findChatTierType(Player player) {
     UUID uniqueId = player.getUniqueId();
-    return this.findChatTier(uniqueId);
+    return this.findChatTierType(uniqueId);
   }
 
-  ChatTier getChatTier(String name);
+  ChatTierType getChatTierType(String name);
 
-  void setChatTier(Player player, ChatTier chatTier);
+  Map<String, Object> getChannelMetadata(String channel);
 
-  boolean createChatTier(ChatTier chatTier);
+  String getChannelName(Player player);
 
-  boolean deleteChatTier(String name);
+  void setChatTier(Player player, ChatTierType chatTierType);
 
-  Collection<ChatTier> getChatTiers();
+  boolean createChannel(String channelName, Map<String, Object> metadata);
+
+  boolean deleteChannel(String name);
+
+  Collection<String> getChannels();
 
   void loadDefaults();
 

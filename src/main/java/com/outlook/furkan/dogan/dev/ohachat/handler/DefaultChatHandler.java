@@ -1,12 +1,14 @@
 package com.outlook.furkan.dogan.dev.ohachat.handler;
 
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.constant.Metadata;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
 import com.outlook.furkan.dogan.dev.ohachat.processor.ChatTierProcessor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -37,7 +39,11 @@ public class DefaultChatHandler implements ChatHandler {
   private void handle(PlayerChatEvent event, Set<Player> postRecipients) {
     Player player = event.getPlayer();
 
-    ChatTier chatTier = this.chatTierManager.findChatTier(player);
-    this.chatTierProcessor.process(player, chatTier, postRecipients);
+    String channel = this.chatTierManager.getChannelName(player);
+    Map<String, Object> metadata = this.chatTierManager.getChannelMetadata(channel);
+    ChatTierType chatTierType = (ChatTierType) metadata.get(Metadata.TYPE);
+
+
+    this.chatTierProcessor.process(player, chatTierType, metadata, postRecipients);
   }
 }

@@ -1,13 +1,12 @@
 package com.outlook.furkan.dogan.dev.ohachat.manager;
 
 import com.outlook.furkan.dogan.dev.ohachat.common.config.ConfigFile;
+import com.outlook.furkan.dogan.dev.ohachat.common.constant.Metadata;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
 import com.outlook.furkan.dogan.dev.ohachat.common.datasource.DataSource;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.player.OhaPlayer;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.GlobalChatTier;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.RangedChatTier;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.WorldChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTierType;
+import com.outlook.furkan.dogan.dev.ohachat.util.MapUtil;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -18,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultChatTierManager implements ChatTierManager {
 
-  private final Map<String, ChatTier> chatTiers = new ConcurrentHashMap<>();
+  private final Map<String, Map<String, Object>> channels = new ConcurrentHashMap<>();
   private final DataSource dataSource;
 
   public DefaultChatTierManager(DataSource dataSource) {
@@ -26,24 +25,41 @@ public class DefaultChatTierManager implements ChatTierManager {
   }
 
   @Override
-  public ChatTier findChatTier(UUID uniqueId) {
+  public ChatTierType findChatTierType(UUID uniqueId) {
     OhaPlayer ohaPlayer = this.dataSource.getPlayer(uniqueId);
     String channel = ohaPlayer.getChannel();
 
     return Optional.of(channel)
-      .map(this.chatTiers::get)
-      .orElse(this.chatTiers.get(DefaultChatTierName.GLOBAL));
+      .map(name -> {
+        Map<String, Object> metadata = this.channels.get(name);
+        return (ChatTierType) metadata.get(Metadata.TYPE);
+      })
+      .orElse(ChatTierType.GLOBAL);
   }
 
   @Override
-  public ChatTier getChatTier(String name) {
-    return this.chatTiers.get(name);
+  public ChatTierType getChatTierType(String channel) {
+    Map<String, Object> metadata = this.channels.get(channel);
+    return (ChatTierType) metadata.get(Metadata.TYPE);
   }
 
   @Override
-  public void setChatTier(Player player, ChatTier chatTier) {
+  public Map<String, Object> getChannelMetadata(String channel) {
+    return this.channels.get(channel);
+  }
+
+  @Override
+  public String getChannelName(Player player) {
     UUID uniqueId = player.getUniqueId();
-    String chatTierName = chatTier.getName();
+
+    OhaPlayer ohaPlayer = this.dataSource.getPlayer(uniqueId);
+    return ohaPlayer.getChannel();
+  }
+
+  @Override
+  public void setChatTier(Player player, ChatTierType chatTierType) {
+    UUID uniqueId = player.getUniqueId();
+    String chatTierName = chatTierType.getName();
 
     OhaPlayer ohaPlayer = this.dataSource.getPlayer(uniqueId);
     ohaPlayer.setChannel(chatTierName);
@@ -52,25 +68,23 @@ public class DefaultChatTierManager implements ChatTierManager {
   }
 
   @Override
-  public boolean createChatTier(ChatTier chatTier) {
-    String name = chatTier.getName();
-
-    if (this.chatTiers.containsKey(name)) {
+  public boolean createChannel(String channelName, Map<String, Object> metadata) {
+    if (this.channels.containsKey(channelName)) {
       return false;
     } else {
-      this.chatTiers.put(name, chatTier);
-      ConfigFile.saveChatTier(chatTier);
+      this.channels.put(channelName, Collections.unmodifiableMap(metadata));
+      ConfigFile.saveChatTier(channelName, metadata);
       return true;
     }
   }
 
   @Override
-  public boolean deleteChatTier(String name) {
+  public boolean deleteChannel(String name) {
     if (!name.equals(DefaultChatTierName.GLOBAL) &&
       !name.equals(DefaultChatTierName.SHOUT) &&
       !name.equals(DefaultChatTierName.LOCAL) &&
       !name.equals(DefaultChatTierName.WHISPER)) {
-      this.chatTiers.remove(name);
+      this.channels.remove(name);
       ConfigFile.deleteChatTier(name);
       return true;
     } else {
@@ -79,8 +93,8 @@ public class DefaultChatTierManager implements ChatTierManager {
   }
 
   @Override
-  public Collection<ChatTier> getChatTiers() {
-    return Collections.unmodifiableCollection(this.chatTiers.values());
+  public Collection<String> getChannels() {
+    return Collections.unmodifiableCollection(this.channels.keySet());
   }
 
   @Override
@@ -90,23 +104,24 @@ public class DefaultChatTierManager implements ChatTierManager {
     String localName = DefaultChatTierName.LOCAL;
     String whisperName = DefaultChatTierName.WHISPER;
 
-    ChatTier global = new GlobalChatTier(globalName);
-    ChatTier shout = new WorldChatTier(shoutName);
-    ChatTier local = new RangedChatTier(localName, ConfigFile.localChannelRange);
-    ChatTier whisper = new RangedChatTier(whisperName, ConfigFile.whisperChannelRange);
+    Map<String, Object> globalMetadata = MapUtil.map(Metadata.TYPE, ChatTierType.GLOBAL);
+    Map<String, Object> shoutMetadata = MapUtil.map(Metadata.TYPE, ChatTierType.GLOBAL);
+    Map<String, Object> localMetadata = MapUtil.map(Metadata.TYPE, ChatTierType.RANGED, Metadata.RANGE, ConfigFile.localChannelRange);
+    Map<String, Object> whisperMetadata = MapUtil.map(Metadata.TYPE, ChatTierType.RANGED, Metadata.RANGE, ConfigFile.whisperChannelRange);
 
-    this.chatTiers.put(globalName, global);
-    this.chatTiers.put(shoutName, shout);
-    this.chatTiers.put(localName, local);
-    this.chatTiers.put(whisperName, whisper);
+    this.channels.put(globalName, globalMetadata);
+    this.channels.put(shoutName, shoutMetadata);
+    this.channels.put(localName, localMetadata);
+    this.channels.put(whisperName, whisperMetadata);
   }
 
   @Override
   public void loadCustoms() {
     ConfigFile.loadChatTiers()
-      .forEach(chatTier -> {
-        String name = chatTier.getName();
-        this.chatTiers.put(name, chatTier);
+      .forEach(metadata -> {
+        String name = (String) metadata.get(Metadata.NAME);
+        metadata.remove(Metadata.NAME);
+        this.channels.put(name, metadata);
       });
   }
 }

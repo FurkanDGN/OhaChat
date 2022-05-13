@@ -7,13 +7,11 @@ import com.gmail.furkanaxx34.dlibrary.transformer.annotations.Comment;
 import com.gmail.furkanaxx34.dlibrary.transformer.annotations.Exclude;
 import com.gmail.furkanaxx34.dlibrary.transformer.annotations.Names;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierConfigPath;
-import com.outlook.furkan.dogan.dev.ohachat.common.constant.ChatTierMetadata;
+import com.outlook.furkan.dogan.dev.ohachat.common.constant.Metadata;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.NamePatterns;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.GlobalChatTier;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.RangedChatTier;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.WorldChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.common.domain.exception.InvalidTypeException;
+import com.outlook.furkan.dogan.dev.ohachat.util.MapUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
@@ -65,13 +63,11 @@ public class ConfigFile extends TransformedObject {
     ConfigFile.instance.initiate();
   }
 
-  public static void saveChatTier(ChatTier chatTier) {
-    String name = chatTier.getName();
-    String chatTierType = chatTier.getType();
-    Map<String, Object> metadata = chatTier.getMetadata();
+  public static void saveChatTier(String channelName, Map<String, Object> metadata) {
+    String chatTierType = ((ChatTierType) metadata.get(Metadata.TYPE)).getName();
 
-    ConfigFile.saveChatTierType(name, chatTierType);
-    ConfigFile.saveChatTierMetadata(name, metadata);
+    ConfigFile.saveChatTierType(channelName, chatTierType);
+    ConfigFile.saveChatTierMetadata(channelName, metadata);
 
     ConfigFile.instance.save();
   }
@@ -83,7 +79,7 @@ public class ConfigFile extends TransformedObject {
     ConfigFile.instance.save();
   }
 
-  public static Set<ChatTier> loadChatTiers() {
+  public static Set<Map<String, Object>> loadChatTiers() {
     return ConfigFile.instance.get(ChatTierConfigPath.PARENT_PATH)
       .map(o -> {
         ConfigurationSection section = (ConfigurationSection) o;
@@ -98,18 +94,21 @@ public class ConfigFile extends TransformedObject {
             Map<String, Object> metadata = ConfigFile.buildMetadata(metadataSectionPath);
             String type = (String) ConfigFile.instance.get(typePath).orElseThrow(() -> new InvalidTypeException("Incorrect configuration [" + name + "]"));
             switch (type) {
-              case "global":
-                return new GlobalChatTier(name);
-              case "world":
-                return new WorldChatTier(name);
-              case "ranged":
-                Object rangeObject = metadata.get(ChatTierMetadata.RANGE);
+              case "global": {
+                return MapUtil.<String, Object>map(Metadata.NAME, name, Metadata.TYPE, ChatTierType.GLOBAL);
+              }
+              case "world": {
+                return MapUtil.<String, Object>map(Metadata.NAME, name, Metadata.TYPE, ChatTierType.WORLD);
+              }
+              case "ranged": {
+                Object rangeObject = metadata.get(Metadata.RANGE);
                 if (rangeObject == null) {
-                  throw new RuntimeException(ChatTierMetadata.RANGE + " is required for ranged chat tier");
+                  throw new RuntimeException(Metadata.RANGE + " is required for ranged chat tier");
                 }
 
                 double range = Double.parseDouble(String.valueOf(rangeObject));
-                return new RangedChatTier(name, range);
+                return MapUtil.<String, Object>map(Metadata.NAME, name, Metadata.TYPE, ChatTierType.RANGED, Metadata.RANGE, range);
+              }
               default:
                 throw new InvalidTypeException("Incorrect configuration [" + name + "]");
             }

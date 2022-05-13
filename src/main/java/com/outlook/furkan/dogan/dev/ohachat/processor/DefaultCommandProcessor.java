@@ -1,7 +1,7 @@
 package com.outlook.furkan.dogan.dev.ohachat.processor;
 
 import com.outlook.furkan.dogan.dev.ohachat.common.config.LanguageFile;
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
 import com.outlook.furkan.dogan.dev.ohachat.util.MessageUtil;
 import org.bukkit.entity.Player;
@@ -21,7 +21,7 @@ public class DefaultCommandProcessor implements CommandProcessor {
 
   @Override
   public boolean process(Player player, String channel, String message) {
-    ChatTier chatTier = this.chatTierManager.getChatTier(channel);
+    ChatTierType chatTier = this.chatTierManager.getChatTierType(channel);
 
     if (chatTier == null) {
       return false;
@@ -33,7 +33,7 @@ public class DefaultCommandProcessor implements CommandProcessor {
   }
 
   private void processMessage(Player player, String channel, String message) {
-    ChatTier oldChatTier = this.chatTierManager.findChatTier(player);
+    ChatTierType oldChatTier = this.chatTierManager.findChatTierType(player);
 
     if (message == null || message.isEmpty()) {
       MessageUtil.sendMessage(player, LanguageFile.channelSet, new SimpleEntry<>("%channel%", () -> channel));

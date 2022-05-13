@@ -1,6 +1,6 @@
 package com.outlook.furkan.dogan.dev.ohachat.hook;
 
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.manager.ChatTierManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
@@ -37,7 +37,7 @@ public class PAPIHook extends PlaceholderExpansion {
   public String onRequest(OfflinePlayer player, String params) {
     if (params.equalsIgnoreCase("channel")) {
       UUID uniqueId = player.getUniqueId();
-      ChatTier chatTier = this.chatTierManager.findChatTier(uniqueId);
+      ChatTierType chatTier = this.chatTierManager.findChatTierType(uniqueId);
       return chatTier.getName();
     }
 

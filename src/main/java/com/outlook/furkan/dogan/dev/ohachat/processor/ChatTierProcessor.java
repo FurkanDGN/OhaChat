@@ -1,8 +1,9 @@
 package com.outlook.furkan.dogan.dev.ohachat.processor;
 
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTierType;
 import org.bukkit.entity.Player;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -10,5 +11,5 @@ import java.util.Set;
  */
 public interface ChatTierProcessor {
 
-  void process(Player sender, ChatTier chatTier, Set<Player> postRecipients);
+  void process(Player sender, ChatTierType chatTierType, Map<String, Object> metadata, Set<Player> postRecipients);
 }

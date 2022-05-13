@@ -1,9 +1,10 @@
 package com.outlook.furkan.dogan.dev.ohachat.processor;
 
-import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTier;
+import com.outlook.furkan.dogan.dev.ohachat.common.domain.chat.tier.ChatTierType;
 import com.outlook.furkan.dogan.dev.ohachat.manager.PreferencesManager;
 import org.bukkit.entity.Player;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,8 +20,8 @@ public class DefaultChatTierProcessor implements ChatTierProcessor {
   }
 
   @Override
-  public void process(Player sender, ChatTier chatTier, Set<Player> postRecipients) {
-    Set<? extends Player> recipients = chatTier.findRecipients(sender)
+  public void process(Player sender, ChatTierType chatTierType, Map<String, Object> metadata, Set<Player> postRecipients) {
+    Set<? extends Player> recipients = chatTierType.findRecipients(sender, metadata)
       .filter(recipient -> this.preferencesManager.shouldSee(sender, recipient))
       .collect(Collectors.toSet());
 

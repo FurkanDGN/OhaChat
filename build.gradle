@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.outlook.furkan.dogan'
-version = '2.0.3'
+version = '2.0.4'
 
 repositories {
     mavenLocal()
@@ -26,6 +26,10 @@ repositories {
 dependencies {
     // library
     implementation 'com.gmail.furkanaxx34:DBukkit:1.0.0'
+
+    implementation('org.reflections:reflections:0.10.2') {
+        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    }
 
     // spigot API
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'

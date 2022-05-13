@@ -6,6 +6,7 @@ import com.outlook.furkan.dogan.dev.ohachat.command.OhaAdminCommand;
 import com.outlook.furkan.dogan.dev.ohachat.common.config.ConfigFile;
 import com.outlook.furkan.dogan.dev.ohachat.common.config.LanguageFile;
 import com.outlook.furkan.dogan.dev.ohachat.common.constant.DefaultChatTierName;
+import com.outlook.furkan.dogan.dev.ohachat.common.constant.Metadata;
 import com.outlook.furkan.dogan.dev.ohachat.common.datasource.DataSource;
 import com.outlook.furkan.dogan.dev.ohachat.common.datasource.sql.impl.SQLite;
 import com.outlook.furkan.dogan.dev.ohachat.handler.ChatHandler;
@@ -101,8 +102,8 @@ public final class OhaChat extends JavaPlugin {
     this.getCommand("unblock").setExecutor(blockCommand);
 
     ConfigFile.loadChatTiers()
-      .forEach(chatTier -> {
-        String name = chatTier.getName();
+      .forEach(metadata -> {
+        String name = (String) metadata.get(Metadata.NAME);
         chatTierCommandManager.registerCommand(name);
       });
   }
